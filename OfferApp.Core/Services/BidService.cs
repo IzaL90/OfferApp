@@ -66,6 +66,7 @@ namespace OfferApp.Core.Services
         {
             var bid = GetBid(id);
             bid.Publish();
+            _repository.Update(bid);
             return bid.Published;
         }
 
@@ -73,6 +74,7 @@ namespace OfferApp.Core.Services
         {
             var bid = GetBid(id);
             bid.Unpublish();
+            _repository.Update(bid);
             return !bid.Published;
         }
 
@@ -82,19 +84,15 @@ namespace OfferApp.Core.Services
             bid.ChangeName(dto.Name);
             bid.ChangeDescription(dto.Description);
             bid.ChangeFirstPrice(dto.FirstPrice);
+            _repository.Update(bid);
             return bid.AsDto();
         }
 
         public BidPublishedDto BidUp(int id, decimal price)
         {
             var bid = GetBid(id);
-
-            if (!bid.Published)
-            {
-                throw new OfferException($"Bid with id '{id}' is not published");
-            }
-
             bid.ChangePrice(price);
+            _repository.Update(bid);
             return bid.AsPublishedDto();
         }
 
