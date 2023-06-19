@@ -6,7 +6,7 @@ namespace OfferApp.Core.Entities
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public DateTime Created { get; private set; } = DateTime.Now;
+        public DateTime Created { get; private set; } = DateTime.UtcNow;
         public DateTime? Updated { get; private set; }
         public int Count { get; private set; }
         public decimal FirstPrice { get; private set; }
@@ -17,7 +17,13 @@ namespace OfferApp.Core.Entities
         {
             ValidName(name);
             ValidDescription(description);
-            ValidFirstPrice(firstPrice);
+            ValidPrice(firstPrice);
+            
+            if (lastPrice.HasValue)
+            {
+                ValidPrice(lastPrice.Value);
+            }
+
             Id = id;
             Name = name;
             Description = description;
@@ -33,7 +39,7 @@ namespace OfferApp.Core.Entities
 
         public static Bid Create(string name, string description, decimal firstPrice)
         {
-            return new Bid(0, name, description, DateTime.Now, firstPrice);
+            return new Bid(0, name, description, DateTime.UtcNow, firstPrice);
         }
 
         public void ChangeName(string name)
@@ -62,7 +68,7 @@ namespace OfferApp.Core.Entities
             {
                 throw new OfferException("Cannot change an offer once it has been published");
             }
-            ValidFirstPrice(firstPrice);
+            ValidPrice(firstPrice);
             FirstPrice = firstPrice;
         }
 
@@ -91,7 +97,7 @@ namespace OfferApp.Core.Entities
                 }
 
                 LastPrice = price;
-                Updated = DateTime.Now;
+                Updated = DateTime.UtcNow;
                 Count++;
                 return;
             }
@@ -102,11 +108,11 @@ namespace OfferApp.Core.Entities
             }
 
             LastPrice = price;
-            Updated = DateTime.Now;
+            Updated = DateTime.UtcNow;
             Count++;
         }
 
-        private void ValidName(string name)
+        private static void ValidName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -119,7 +125,7 @@ namespace OfferApp.Core.Entities
             }
         }
 
-        private void ValidDescription(string description)
+        private static void ValidDescription(string description)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
@@ -132,11 +138,11 @@ namespace OfferApp.Core.Entities
             }
         }
 
-        private void ValidFirstPrice(decimal firstPrice)
+        private static void ValidPrice(decimal price)
         {
-            if (firstPrice < 0)
+            if (price < 0)
             {
-                throw new OfferException($"Price '{firstPrice}' cannot be negative");
+                throw new OfferException($"Price '{price}' cannot be negative");
             }
         }
     }
