@@ -65,6 +65,12 @@ namespace OfferApp.Core.Services
         public bool Published(int id)
         {
             var bid = GetBid(id);
+
+            if (bid.Published)
+            {
+                return true;
+            }
+
             bid.Publish();
             _repository.Update(bid);
             return bid.Published;
@@ -73,6 +79,12 @@ namespace OfferApp.Core.Services
         public bool Unpublished(int id)
         {
             var bid = GetBid(id);
+
+            if (!bid.Published)
+            {
+                return true;
+            }
+
             bid.Unpublish();
             _repository.Update(bid);
             return !bid.Published;
