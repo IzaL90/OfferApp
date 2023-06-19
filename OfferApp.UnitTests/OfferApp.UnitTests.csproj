@@ -28,4 +28,8 @@
     <ProjectReference Include="..\OfferApp.Core\OfferApp.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
