@@ -2,7 +2,10 @@
 using OfferApp.Core.Entities;
 using OfferApp.Core.Repositories;
 using OfferApp.Core.Services;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("OfferApp.UnitTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace OfferApp.Core
 {
     public static class Extensions
