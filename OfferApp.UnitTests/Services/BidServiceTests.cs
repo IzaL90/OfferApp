@@ -90,6 +90,17 @@ namespace OfferApp.UnitTests.Services
         }
 
         [Fact]
+        public void GivenBidPublished_WhenPublishedBid_ShouldntUpdateBid()
+        {
+            var bid = Common.CreatePublishedBid();
+            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+
+            _service.Published(bid.Id);
+
+            _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Never);
+        }
+
+        [Fact]
         public void GivenNotExistingBid_WhenUnpublishedBid_ShouldThrowAnException()
         {
             var bid = Common.CreateBid();
@@ -110,6 +121,17 @@ namespace OfferApp.UnitTests.Services
             _service.Unpublished(bid.Id);
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
+        }
+
+        [Fact]
+        public void GivenBidUnpublished_WhenUnpublishedBid_ShouldntUpdateBid()
+        {
+            var bid = Common.CreateBid();
+            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+
+            _service.Unpublished(bid.Id);
+
+            _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Never);
         }
 
         [Fact]
