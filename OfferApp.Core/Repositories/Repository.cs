@@ -20,8 +20,8 @@ namespace OfferApp.Core.Repositories
                 return entity.Id;
             }
 
-            entity.Id = list![^1].Id + 1;
-            list.Add(entity);
+            entity.Id = list!.Max(x => x.Id) + 1; 
+            list!.Add(entity);
             return entity.Id;
         }
 
@@ -42,15 +42,7 @@ namespace OfferApp.Core.Repositories
                 return null;
             }
 
-            foreach (var item in list!)
-            {
-                if (item.Id == id)
-                {
-                    return item;
-                }
-            }
-
-            return null;
+            return list?.FirstOrDefault(i => i.Id == id);
         }
 
         public IReadOnlyList<T> GetAll()
