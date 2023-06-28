@@ -154,19 +154,7 @@ namespace OfferApp.ConsoleApp
         private BidDto? CreateBid()
         {
             var bid = new BidDto();
-            if (!SetTitle(bid))
-            {
-                return null;
-            }
-            if (!SetDescription(bid))
-            {
-                return null;
-            }
-            if (!SetFirstPrice(bid))
-            {
-                return null;
-            }
-            return bid;
+            return ModifiedBid(bid);
         }
 
         private BidDto? ModifiedBid(BidDto bid)
