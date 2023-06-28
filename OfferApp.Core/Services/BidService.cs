@@ -30,31 +30,17 @@ namespace OfferApp.Core.Services
 
         public IReadOnlyList<BidDto> GetAllBids()
         {
-            var bids = _repository.GetAll();
-            var dtos = new List<BidDto>();
-
-            foreach (var bid in bids)
-            {
-                dtos.Add(bid.AsDto());
-            }
-
-            return dtos;
+            return _repository.GetAll()
+                .Select(bid => bid.AsDto())
+                .ToList();
         }
 
         public IReadOnlyList<BidPublishedDto> GetAllPublishedBids()
         {
-            var bids = _repository.GetAll();
-            var dtos = new List<BidPublishedDto>();
-
-            foreach (var bid in bids)
-            {
-                if (bid.Published)
-                {
-                    dtos.Add(bid.AsPublishedDto());
-                }
-            }
-
-            return dtos;
+            return _repository.GetAll()
+                .Where(bid => bid.Published)
+                .Select(bid => bid.AsPublishedDto())
+                .ToList();
         }
 
         public BidDto? GetBidById(int id)
