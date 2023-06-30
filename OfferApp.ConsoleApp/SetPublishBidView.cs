@@ -14,9 +14,9 @@ namespace OfferApp.ConsoleApp
             _bidService = bidService;
         }
 
-        public void GenerateView()
+        public async Task GenerateView()
         {
-            var bid = GetBid();
+            var bid = await GetBid();
             if (bid is null)
             {
                 return;
@@ -28,18 +28,18 @@ namespace OfferApp.ConsoleApp
             }
             if (publish.Value)
             {
-                Console.WriteLine(_bidService.Published(bid.Id) ? $"Published Bid with id '{bid.Id}'" : $"Cannot published Bid with id '{bid.Id}'");
+                Console.WriteLine(await _bidService.Published(bid.Id) ? $"Published Bid with id '{bid.Id}'" : $"Cannot published Bid with id '{bid.Id}'");
             }
             else
             {
-                Console.WriteLine(_bidService.Unpublished(bid.Id) ? $"Unpublished Bid with id '{bid.Id}'" : $"Cannot unpublished Bid with id '{bid.Id}'");
+                Console.WriteLine(await _bidService.Unpublished(bid.Id) ? $"Unpublished Bid with id '{bid.Id}'" : $"Cannot unpublished Bid with id '{bid.Id}'");
             }
         }
 
-        private BidDto? GetBid()
+        private async Task<BidDto?> GetBid()
         {
             var id = GetBidId();
-            var quest = _bidService.GetBidById(id);
+            var quest = await _bidService.GetBidById(id);
 
             if (quest is null)
             {

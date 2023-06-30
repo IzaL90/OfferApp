@@ -5,10 +5,10 @@ namespace OfferApp.Core.Repositories
     internal interface IRepository<T>
         where T : BaseEntity
     {
-        int Add(T entity);
-        bool Update(T entity);
-        void Delete(T entity);
-        T? Get(int id);
-        IReadOnlyList<T> GetAll();
+        Task<int> Add(T entity);
+        Task<bool> Update(T entity);
+        Task Delete(T entity);
+        Task<T?> Get(int id);
+        Task<IReadOnlyList<T>> GetAll();
     }
 }

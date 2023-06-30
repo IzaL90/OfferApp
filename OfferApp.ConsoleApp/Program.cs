@@ -25,4 +25,4 @@ var serviceCollection = Setup();
 var serviceProvider = serviceCollection.BuildServiceProvider();
 
 var bidInteractionService = serviceProvider.GetRequiredService<BidInteractionService>();
-bidInteractionService.RunApp();
+await bidInteractionService.RunApp();

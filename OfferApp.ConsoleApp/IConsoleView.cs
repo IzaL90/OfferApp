@@ -4,6 +4,6 @@
     {
         string KeyProvider { get; }
 
-        void GenerateView();
+        Task GenerateView();
     }
 }

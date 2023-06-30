@@ -4,22 +4,22 @@ namespace OfferApp.Core.Services
 {
     public interface IBidService : IService
     {
-        BidDto AddBid(BidDto dto);
+        Task<BidDto> AddBid(BidDto dto);
 
-        BidDto UpdateBid(BidDto dto);
+        Task<BidDto> UpdateBid(BidDto dto);
 
-        void DeleteBid(int id);
+        Task DeleteBid(int id);
 
-        BidDto? GetBidById(int id);
+        Task<BidDto?> GetBidById(int id);
 
-        IReadOnlyList<BidDto> GetAllBids();
+        Task<IReadOnlyList<BidDto>> GetAllBids();
 
-        IReadOnlyList<BidPublishedDto> GetAllPublishedBids();
+        Task<IReadOnlyList<BidPublishedDto>> GetAllPublishedBids();
 
-        bool Published(int id);
+        Task<bool> Published(int id);
         
-        bool Unpublished(int id);
+        Task<bool> Unpublished(int id);
 
-        BidPublishedDto BidUp(int id, decimal price);
+        Task<BidPublishedDto> BidUp(int id, decimal price);
     }
 }

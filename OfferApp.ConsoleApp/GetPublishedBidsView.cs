@@ -13,9 +13,9 @@ namespace OfferApp.ConsoleApp
             _bidService = bidService;
         }
 
-        public void GenerateView()
+        public async Task GenerateView()
         {
-            var bidsPublished = _bidService.GetAllPublishedBids();
+            var bidsPublished = await _bidService.GetAllPublishedBids();
             foreach (var bidInList in bidsPublished)
             {
                 Console.WriteLine($"Bid: {bidInList}");

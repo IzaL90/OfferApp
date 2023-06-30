@@ -11,32 +11,32 @@ namespace OfferApp.UnitTests.Services
     public class BidServiceTests
     {
         [Fact]
-        public void ShouldAddBid()
+        public async Task ShouldAddBid()
         {
             var bid = Common.CreateBid();
 
-            _service.AddBid(bid.AsDto());
+            await _service.AddBid(bid.AsDto());
 
             _bidRepository.Verify(b => b.Add(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
         }
 
         [Fact]
-        public void ShouldDeleteBid()
+        public async Task ShouldDeleteBid()
         {
             var bid = Common.CreateBid();
-            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
-            _service.DeleteBid(bid.Id);
+            await _service.DeleteBid(bid.Id);
 
             _bidRepository.Verify(b => b.Delete(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
         }
 
         [Fact]
-        public void GivenNotExistingBid_WhenDeleteBid_ShouldThrowAnException()
+        public async Task GivenNotExistingBid_WhenDeleteBid_ShouldThrowAnException()
         {
             var bid = Common.CreateBid();
             
-            var exception = Record.Exception(() => _service.DeleteBid(bid.Id));
+            var exception = await Record.ExceptionAsync(() => _service.DeleteBid(bid.Id));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
@@ -44,22 +44,22 @@ namespace OfferApp.UnitTests.Services
         }
 
         [Fact]
-        public void ShouldUpdateBid()
+        public async Task ShouldUpdateBid()
         {
             var bid = Common.CreateBid();
-            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
-            _service.UpdateBid(bid.AsDto());
+            await _service.UpdateBid(bid.AsDto());
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
         }
 
         [Fact]
-        public void GivenNotExistingBid_WhenUpdateBid_ShouldThrowAnException()
+        public async Task GivenNotExistingBid_WhenUpdateBid_ShouldThrowAnException()
         {
             var bid = Common.CreateBid();
             
-            var exception = Record.Exception(() => _service.UpdateBid(bid.AsDto()));
+            var exception = await Record.ExceptionAsync(() => _service.UpdateBid(bid.AsDto()));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
@@ -67,11 +67,11 @@ namespace OfferApp.UnitTests.Services
         }
 
         [Fact]
-        public void GivenNotExistingBid_WhenPublishedBid_ShouldThrowAnException()
+        public async Task GivenNotExistingBid_WhenPublishedBid_ShouldThrowAnException()
         {
             var bid = Common.CreateBid();
 
-            var exception = Record.Exception(() => _service.Published(bid.Id));
+            var exception = await Record.ExceptionAsync(() => _service.Published(bid.Id));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
@@ -79,33 +79,33 @@ namespace OfferApp.UnitTests.Services
         }
 
         [Fact]
-        public void ShouldChangeBidToPublished()
+        public async Task ShouldChangeBidToPublished()
         {
             var bid = Common.CreateBid();
-            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
-            _service.Published(bid.Id);
+            await _service.Published(bid.Id);
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
         }
 
         [Fact]
-        public void GivenBidPublished_WhenPublishedBid_ShouldntUpdateBid()
+        public async Task GivenBidPublished_WhenPublishedBid_ShouldntUpdateBid()
         {
             var bid = Common.CreatePublishedBid();
-            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
-            _service.Published(bid.Id);
+            await _service.Published(bid.Id);
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Never);
         }
 
         [Fact]
-        public void GivenNotExistingBid_WhenUnpublishedBid_ShouldThrowAnException()
+        public async Task GivenNotExistingBid_WhenUnpublishedBid_ShouldThrowAnException()
         {
             var bid = Common.CreateBid();
 
-            var exception = Record.Exception(() => _service.Unpublished(bid.Id));
+            var exception = await Record.ExceptionAsync(() => _service.Unpublished(bid.Id));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
@@ -113,33 +113,33 @@ namespace OfferApp.UnitTests.Services
         }
 
         [Fact]
-        public void ShouldChangeBidToUnpublished()
+        public async Task ShouldChangeBidToUnpublished()
         {
             var bid = Common.CreatePublishedBid();
-            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
-            _service.Unpublished(bid.Id);
+            await _service.Unpublished(bid.Id);
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
         }
 
         [Fact]
-        public void GivenBidUnpublished_WhenUnpublishedBid_ShouldntUpdateBid()
+        public async Task GivenBidUnpublished_WhenUnpublishedBid_ShouldntUpdateBid()
         {
             var bid = Common.CreateBid();
-            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
-            _service.Unpublished(bid.Id);
+            await _service.Unpublished(bid.Id);
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Never);
         }
 
         [Fact]
-        public void GivenNotExistingBid_WhenBidUp_ShouldThrowAnException()
+        public async Task GivenNotExistingBid_WhenBidUp_ShouldThrowAnException()
         {
             var bid = Common.CreateBid();
 
-            var exception = Record.Exception(() => _service.BidUp(bid.Id, 100000));
+            var exception = await Record.ExceptionAsync(() => _service.BidUp(bid.Id, 100000));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
@@ -147,12 +147,12 @@ namespace OfferApp.UnitTests.Services
         }
 
         [Fact]
-        public void ShouldBidUp()
+        public async Task ShouldBidUp()
         {
             var bid = Common.CreatePublishedBid();
-            _bidRepository.Setup(b => b.Get(bid.Id)).Returns(bid);
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
-            _service.BidUp(bid.Id, 100000);
+            await _service.BidUp(bid.Id, 100000);
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
         }

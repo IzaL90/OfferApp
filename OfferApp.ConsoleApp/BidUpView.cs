@@ -14,9 +14,9 @@ namespace OfferApp.ConsoleApp
             _bidService = bidService;
         }
 
-        public void GenerateView()
+        public async Task GenerateView()
         {
-            var bid = GetBid();
+            var bid = await GetBid();
             if (bid is null)
             {
                 return;
@@ -26,13 +26,13 @@ namespace OfferApp.ConsoleApp
             {
                 return;
             }
-            _bidService.BidUp(bid.Id, bidUpValue.Value);
+            await _bidService.BidUp(bid.Id, bidUpValue.Value);
         }
 
-        private BidDto? GetBid()
+        private async Task<BidDto?> GetBid()
         {
             var id = GetBidId();
-            var quest = _bidService.GetBidById(id);
+            var quest = await _bidService.GetBidById(id);
 
             if (quest is null)
             {
