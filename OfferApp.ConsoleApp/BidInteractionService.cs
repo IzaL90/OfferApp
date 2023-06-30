@@ -15,7 +15,7 @@ namespace OfferApp.ConsoleApp
             _serviceProvider = serviceProvider;
         }
 
-        public void RunApp()
+        public async Task RunApp()
         {
             var menuService = _serviceProvider.GetRequiredService<IMenuService>();
             var menus = menuService.GetMenus();
@@ -40,7 +40,7 @@ namespace OfferApp.ConsoleApp
                         case ConsoleKey.D6:
                         case ConsoleKey.D7:
                         case ConsoleKey.D8:
-                            InvokeView(consoleKey);
+                            await InvokeView(consoleKey);
                             break;
                         case ConsoleKey.D9:
                             isProgramRunning = false;
@@ -70,10 +70,10 @@ namespace OfferApp.ConsoleApp
             }
         }
 
-        private void InvokeView(ConsoleKeyInfo key)
+        private async Task InvokeView(ConsoleKeyInfo key)
         {
             var view = GetView(key.KeyChar.ToString());
-            view.GenerateView();
+            await view.GenerateView();
         }
 
         private IConsoleView GetView(string keyCharacter)

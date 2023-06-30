@@ -13,10 +13,10 @@ namespace OfferApp.ConsoleApp
             _bidService = bidService;
         }
 
-        public void GenerateView()
+        public async Task GenerateView()
         { 
             var id = GetBidId();
-            _bidService.DeleteBid(id);
+            await _bidService.DeleteBid(id);
             Console.WriteLine($"Bid with id: {id} was deleted");
         }
 

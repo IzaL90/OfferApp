@@ -14,22 +14,22 @@ namespace OfferApp.ConsoleApp
             _bidService = bidService;
         }
 
-        public void GenerateView()
+        public async Task GenerateView()
         {
-            var bid = GetBid();
+            var bid = await GetBid();
             if (bid is null)
             {
                 return;
             }
             ModifiedBid(bid);
-            bid = _bidService.UpdateBid(bid);
+            bid = await _bidService.UpdateBid(bid);
             Console.WriteLine($"Updated Bid {bid}");
         }
 
-        private BidDto? GetBid()
+        private async Task<BidDto?> GetBid()
         {
             var id = GetBidId();
-            var quest = _bidService.GetBidById(id);
+            var quest = await _bidService.GetBidById(id);
 
             if (quest is null)
             {
@@ -44,25 +44,9 @@ namespace OfferApp.ConsoleApp
             int.TryParse(Console.ReadLine(), out var id);
             return id;
         }
+
         private static BidDto? ModifiedBid(BidDto bid)
         {
-            if (!SetTitle(bid))
-            {
-                return null;
-            }
-            if (!SetDescription(bid))
-            {
-                return null;
-            }
-            if (!SetFirstPrice(bid))
-            {
-                return null;
-            }
-            return bid;
-        }
-        private static BidDto? CreateBid()
-        {
-            var bid = new BidDto();
             if (!SetTitle(bid))
             {
                 return null;

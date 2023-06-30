@@ -14,7 +14,7 @@ namespace OfferApp.ConsoleApp
             _bidService = bidService;
         }
 
-        public void GenerateView()
+        public async Task GenerateView()
         {
             var bid = CreateBid();
 
@@ -23,7 +23,7 @@ namespace OfferApp.ConsoleApp
                 return;
             }
 
-            bid = _bidService.AddBid(bid);
+            bid = await _bidService.AddBid(bid);
             Console.WriteLine($"Added Bid {bid}");
         }
 
