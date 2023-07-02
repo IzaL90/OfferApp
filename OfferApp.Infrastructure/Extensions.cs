@@ -8,7 +8,9 @@ namespace OfferApp.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            return services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
+            //return services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
+            // podmiana na repozytorium w pliku xml
+            return services.AddScoped(typeof(IRepository<>), typeof(XmlRepository<>));
         }
     }
 }
