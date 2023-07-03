@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OfferApp.Core.DTO;
-using OfferApp.Core.Repositories;
 using OfferApp.Core.Services;
 using System.Runtime.CompilerServices;
 

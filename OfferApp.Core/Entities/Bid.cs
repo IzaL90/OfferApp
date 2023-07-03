@@ -1,33 +1,16 @@
 ﻿using OfferApp.Core.Exceptions;
-using System.Runtime.Serialization;
 
 namespace OfferApp.Core.Entities
 {
-    [DataContract] // atrybut niezbędny do serializaci i deserializacji prywatnych właściwości
     public class Bid : BaseEntity
     {
-        [DataMember] // atrybut niezbędny do serializaci i deserializacji prywatnych właściwości
         public string Name { get; private set; }
-
-        [DataMember]
         public string Description { get; private set; }
-        
-        [DataMember]
         public DateTime Created { get; private set; } = DateTime.UtcNow;
-        
-        [DataMember]
         public DateTime? Updated { get; private set; }
-
-        [DataMember]
         public int Count { get; private set; }
-        
-        [DataMember]
         public decimal FirstPrice { get; private set; }
-
-        [DataMember]
         public decimal? LastPrice { get; private set; }
-        
-        [DataMember]
         public bool Published { get; private set; }
 
         private Bid() : base(0) { } // na potrzeby serializacji / deserializacji istniała potrzeba wprowadzenia konstruktora bezparametrowego

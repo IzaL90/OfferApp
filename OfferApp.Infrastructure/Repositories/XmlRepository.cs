@@ -9,15 +9,11 @@ namespace OfferApp.Infrastructure.Repositories
         where T : BaseEntity
     {
         private readonly string _filePathEntities;
-        // XmlSerializer nie jest w stanie serializować i deserializować prywatne pola
-        // Zobacz
-        // https://stackoverflow.com/questions/54573370/how-to-deserialize-an-xml-string-into-an-object-that-has-properties-with-private
         private readonly DataContractSerializer _serializer;
 
         public XmlRepository()
         {
             var type = typeof(T);
-            // ścieżka do głównego folder ConsoleApp
             _filePathEntities = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.FullName + Path.DirectorySeparatorChar + type.Name + ".xml";
             _serializer = new DataContractSerializer(typeof(List<T>));
 
