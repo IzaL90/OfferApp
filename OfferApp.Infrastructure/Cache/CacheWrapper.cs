@@ -2,10 +2,6 @@
 
 namespace OfferApp.Infrastructure.Cache
 {
-    // MemoryCache nie dostarcza interfejsu i z tego powodu zastosowałem wrapper.
-    // Dodatkowo MemoryCache obudowuje każdy element jako CacheItem.
-    // MemoryCache do każdej wartości podochodzi indywidualnie tzn każdemu obiektowi można ustawić własne jego policy.
-    // My akurat potrzebujemy globalnych ustawień dlatego przekazałem CacheOptions w konstruktorze
     internal sealed class CacheWrapper : ICacheWrapper
     {
         private readonly MemoryCache _cache;

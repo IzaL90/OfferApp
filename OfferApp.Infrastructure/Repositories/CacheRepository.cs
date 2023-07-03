@@ -4,7 +4,6 @@ using OfferApp.Infrastructure.Cache;
 
 namespace OfferApp.Infrastructure.Repositories
 {
-    // Zastosowałem wzorzec dekorator, który dekoruje aktualne repozytorium
     internal sealed class CacheRepository<T> : IRepository<T>
         where T : BaseEntity
     {
