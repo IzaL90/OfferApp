@@ -1,5 +1,4 @@
 ﻿using FluentMigrator.Runner;
-using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 
 namespace OfferApp.Infrastructure.Database

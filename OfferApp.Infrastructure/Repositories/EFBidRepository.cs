@@ -1,0 +1,47 @@
+﻿using Microsoft.EntityFrameworkCore;
+using OfferApp.Core.Entities;
+using OfferApp.Core.Repositories;
+using OfferApp.Infrastructure.Database;
+
+namespace OfferApp.Infrastructure.Repositories
+{
+    internal sealed class EFBidRepository : IRepository<Bid>
+    {
+        private readonly OfferDbContext _dbContext;
+
+        public EFBidRepository(OfferDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<int> Add(Bid entity)
+        {
+            _dbContext.Bids.Add(entity);
+            await _dbContext.SaveChangesAsync();
+            return entity.Id;
+        }
+
+        public async Task Delete(Bid entity)
+        {
+            _dbContext.Bids.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public Task<Bid?> Get(int id)
+        {
+            return _dbContext.Bids.FirstOrDefaultAsync(b => b.Id == id);
+        }
+
+        public async Task<IReadOnlyList<Bid>> GetAll()
+        {
+            return await _dbContext.Bids.ToListAsync();
+        }
+
+        public async Task<bool> Update(Bid entity)
+        {
+            _dbContext.Bids.Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+    }
+}

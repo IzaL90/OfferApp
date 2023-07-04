@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace OfferApp.Infrastructure.Repositories
 {
-    internal sealed class BidRepository : IRepository<Bid>
+    internal sealed class DapperBidRepository : IRepository<Bid>
     {
         private readonly IDbConnection _dbConnection;
 
-        public BidRepository(IDbConnection dbConnection)
+        public DapperBidRepository(IDbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
