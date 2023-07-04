@@ -1,13 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using OfferApp.Core.Entities;
-using OfferApp.Core.Repositories;
 using OfferApp.Infrastructure.Cache;
 using OfferApp.Infrastructure.Database;
-using OfferApp.Infrastructure.Repositories;
-using System.Data;
 using System.Text.Json;
-using OfferApp.Migrations;
-using MySql.Data.MySqlClient;
 
 namespace OfferApp.Infrastructure
 {
@@ -15,17 +9,14 @@ namespace OfferApp.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, Dictionary<string, object> appsettings)
         {
-            //return services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
-            return services.AddScoped(typeof(IRepository<>), typeof(XmlRepository<>))
-                .AddScoped<BidRepository>()
-                .RegisterCache(appsettings)
-                .AddScoped<IRepository<Bid>>(sp =>
-                {
-                    var repository = sp.GetRequiredService<BidRepository>();
-                    var cacheWrapper = sp.GetRequiredService<ICacheWrapper>();
-                    return new CacheRepository<Bid>(repository, cacheWrapper);
-                })
-                .AddDatabase(appsettings);
+            return services.RegisterAppSettings(appsettings)
+                           .AddDatabase();
+        }
+
+        private static IServiceCollection RegisterAppSettings(this IServiceCollection services, Dictionary<string, object> appsettings)
+        {
+            return services.RegisterCacheOptions(appsettings)
+                           .RegisterDatabaseOptions(appsettings);
         }
 
         public static IServiceProvider UseInfrastructure(this IServiceProvider serviceProvider)
@@ -35,7 +26,7 @@ namespace OfferApp.Infrastructure
             return serviceProvider;
         }
 
-        private static IServiceCollection RegisterCache(this IServiceCollection services, Dictionary<string, object> appsettings)
+        private static IServiceCollection RegisterCacheOptions(this IServiceCollection services, Dictionary<string, object> appsettings)
         {
             var cacheOptionsJsonElement = (JsonElement)(appsettings["cache"]
                 ?? throw new InvalidOperationException("Cannot find section 'cache', please ensure that this file exists"));
@@ -43,11 +34,10 @@ namespace OfferApp.Infrastructure
             {
                 PropertyNameCaseInsensitive = true,
             }) ?? throw new InvalidOperationException("Cannot deserialize section 'cache', please ensure that this section is correct");
-            return services.AddSingleton(cacheOptions)
-                           .AddSingleton<ICacheWrapper, CacheWrapper>();
+            return services.AddSingleton(cacheOptions);
         }
 
-        private static IServiceCollection AddDatabase(this IServiceCollection services, Dictionary<string, object> appsettings)
+        private static IServiceCollection RegisterDatabaseOptions(this IServiceCollection services, Dictionary<string, object> appsettings)
         {
             var databaseOptionsJsonElement = (JsonElement)(appsettings["database"]
                 ?? throw new InvalidOperationException("Cannot find section 'database', please ensure that this file exists"));
@@ -60,14 +50,16 @@ namespace OfferApp.Infrastructure
                 throw new InvalidOperationException("Check in 'database' section 'connectionString' if is correct");
             }
             services.AddSingleton(databaseOptions);
-            services.AddTransient<IDbInitializer, DbInitializer>();
-            services.AddMigrations(databaseOptions.ConnectionString);
-
-            services.AddScoped<IDbConnection, MySqlConnection>(sp =>
-            {
-                return new MySqlConnection(databaseOptions.ConnectionString);
-            });
             return services;
+        }
+
+        // metoda wprowadzona aby umożliwić dostęp do serwisów podczas rejestrowania w kontenerze IoC
+        // podczas rejestracji sporej ilości serwisów może powodować opóźnienie w odpaleniu aplikacji
+        public static T GetService<T>(this IServiceCollection services)
+             where T : notnull
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            return serviceProvider.GetRequiredService<T>();
         }
     }
 }
