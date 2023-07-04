@@ -3,12 +3,12 @@ using MySql.Data.MySqlClient;
 
 namespace OfferApp.Infrastructure.Database
 {
-    internal sealed class DbInitializer : IDbInitializer
+    internal sealed class DapperDbInitializer : IDbInitializer
     {
         private readonly DatabaseOptions _databaseOptions;
         private readonly IMigrationRunner _migrationRunner;
 
-        public DbInitializer(DatabaseOptions databaseOptions, IMigrationRunner migrationRunner)
+        public DapperDbInitializer(DatabaseOptions databaseOptions, IMigrationRunner migrationRunner)
         {
             _databaseOptions = databaseOptions;
             _migrationRunner = migrationRunner;
@@ -16,6 +16,11 @@ namespace OfferApp.Infrastructure.Database
 
         public void Start()
         {
+            if (!_databaseOptions.RunMigrationsOnStart)
+            {
+                return;
+            }
+
             CreateDatabaseIfNotExists(_databaseOptions.ConnectionString!);
             _migrationRunner.MigrateUp();
         }

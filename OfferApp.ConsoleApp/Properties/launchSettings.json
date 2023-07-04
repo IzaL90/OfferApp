@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "OfferApp.ConsoleApp": {
+      "commandName": "Project"
+    },
+    "RunMigrations": {
+      "commandName": "Project",
+      "commandLineArgs": "--RunMigrations"
+    }
+  }
+}

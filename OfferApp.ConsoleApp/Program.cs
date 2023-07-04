@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OfferApp.ConsoleApp;
 using OfferApp.Core;
 using OfferApp.Infrastructure;
@@ -11,21 +12,48 @@ class Program : IDesignTimeDbContextFactory<OfferDbContext>
 {
     public OfferDbContext CreateDbContext(string[] args)
     {
-        var appsettings = GetAppSettings().GetAwaiter().GetResult();
-        var serviceCollection = Setup(appsettings);
+        var serviceCollection = InitApp().GetAwaiter().GetResult();
+        serviceCollection.AddLogging(builder => builder.AddConsole());
         var serviceProvider = serviceCollection.BuildServiceProvider();
         return serviceProvider.GetRequiredService<OfferDbContext>();
     }
 
     public static async Task Main(string[] args)
     {
-        var appsettings = await GetAppSettings();
-        var serviceCollection = Setup(appsettings);
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        serviceProvider.UseInfrastructure();
+        if (args.Contains("--RunMigrations"))
+        {
+            await RunMigrations();
+            return;
+        }
 
+        await RunApp();
+    }
+
+    private static async Task RunMigrations()
+    {
+        var serviceProvider = (await InitApp())
+                           // logowanie podczas przeprowadzania migracji
+                           .AddLogging(builder => builder.AddConsole())
+                           .BuildServiceProvider();
+        var databaseOptions = serviceProvider.GetRequiredService<DatabaseOptions>();
+        databaseOptions.RunMigrationsOnStart = true;
+        await Console.Out.WriteLineAsync("Running Migrations...");
+        serviceProvider.UseInfrastructure();
+        await Console.Out.WriteLineAsync("Migrations applied");
+    }
+
+    private static async Task RunApp()
+    {
+        var serviceProvider = (await InitApp()).BuildServiceProvider();
         var bidInteractionService = serviceProvider.GetRequiredService<BidInteractionService>();
         await bidInteractionService.RunApp();
+    }
+
+    private static async Task<IServiceCollection> InitApp()
+    {
+        var appsettings = await GetAppSettings();
+        var serviceCollection = Setup(appsettings);
+        return serviceCollection;
     }
 
     private static IServiceCollection Setup(Dictionary<string, object> appsettings)
