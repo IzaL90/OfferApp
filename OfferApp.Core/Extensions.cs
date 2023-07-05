@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 using OfferApp.Core.DTO;
 using OfferApp.Core.Services;
 using System.Runtime.CompilerServices;
@@ -13,7 +15,9 @@ namespace OfferApp.Core
         {
             return services
                     .AddScoped(_ => CreateMenuService())
-                    .AddScoped<IBidService, BidService>();
+                    .AddScoped<IBidService, BidService>()
+                    .AddFluentValidationAutoValidation()
+                    .AddValidatorsFromAssembly(typeof(BidDto).Assembly);
         }
 
         private static IMenuService CreateMenuService()
