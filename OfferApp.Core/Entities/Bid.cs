@@ -125,6 +125,11 @@ namespace OfferApp.Core.Entities
             {
                 throw new OfferException($"Name: '{name}' should contain at least 4 characters");
             }
+
+            if (name.Length > 150)
+            {
+                throw new OfferException($"Name: '{name}' shouldn't contain more than 150 characters");
+            }
         }
 
         private static void ValidDescription(string description)
@@ -137,6 +142,11 @@ namespace OfferApp.Core.Entities
             if (description.Length < 10)
             {
                 throw new OfferException($"Description: '{description}' should contain at least 10 characters");
+            }
+
+            if (description.Length > 3000)
+            {
+                throw new OfferException($"Description: '{description}' shouldn't contain more than 3000 characters");
             }
         }
 
