@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfferApp.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfferApp.Migrations", "OfferApp.Migrations\OfferApp.Migrations.csproj", "{D1183F52-537D-4408-8191-E8B031BA83DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfferApp.Api", "OfferApp.Api\OfferApp.Api.csproj", "{0704CA23-3490-4B62-B5F4-5426E5B47CEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfferApp.Api", "OfferApp.Api\OfferApp.Api.csproj", "{0704CA23-3490-4B62-B5F4-5426E5B47CEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
