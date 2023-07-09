@@ -5,7 +5,7 @@ using OfferApp.Infrastructure.Database;
 
 namespace OfferApp.Infrastructure.Repositories
 {
-    internal sealed class EFBidRepository : IRepository<Bid>
+    internal sealed class EFBidRepository : IBidRepository
     {
         private readonly OfferDbContext _dbContext;
 
@@ -35,6 +35,11 @@ namespace OfferApp.Infrastructure.Repositories
         public async Task<IReadOnlyList<Bid>> GetAll()
         {
             return await _dbContext.Bids.ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<Bid>> GetAllPublished()
+        {
+            return await _dbContext.Bids.Where(b => b.Published).ToListAsync();
         }
 
         public async Task<bool> Update(Bid entity)

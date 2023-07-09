@@ -26,7 +26,7 @@ namespace OfferApp.Core.DTO
     {
         public BidValidator()
         {
-            RuleFor(b => b.Name).MinimumLength(4);
+            RuleFor(b => b.Name).MinimumLength(4).MaximumLength(150);
             RuleFor(bid => bid.Description).MinimumLength(10).MaximumLength(3000);
             RuleFor(bid => bid.FirstPrice).GreaterThanOrEqualTo(0);
 

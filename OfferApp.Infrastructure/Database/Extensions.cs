@@ -14,11 +14,17 @@ namespace OfferApp.Infrastructure.Database
             return services;
         }
 
-        public static IServiceCollection AddDbContext(this IServiceCollection services)
+        internal static IServiceCollection AddDbContext(this IServiceCollection services)
         {
             var databaseOptions = services.GetService<IOptions<DatabaseOptions>>();
             var serverVersion = ServerVersion.AutoDetect(databaseOptions.Value.ConnectionString);
             services.AddDbContext<OfferDbContext>(options => options.UseMySql(databaseOptions.Value.ConnectionString, serverVersion));
+            return services;
+        }
+
+        internal static IServiceCollection AddInMemoryStoreProvider(this IServiceCollection services)
+        {
+            services.AddInMemoryRepositories();
             return services;
         }
 

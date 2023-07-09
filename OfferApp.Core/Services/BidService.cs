@@ -8,9 +8,9 @@ namespace OfferApp.Core.Services
 {
     internal sealed class BidService : IBidService
     {
-        private readonly IRepository<Bid> _repository;
+        private readonly IBidRepository _repository;
 
-        public BidService(IRepository<Bid> repository)
+        public BidService(IBidRepository repository)
         {
             _repository = repository;
         }
@@ -30,7 +30,6 @@ namespace OfferApp.Core.Services
 
         public async Task<IReadOnlyList<BidDto>> GetAllBids()
         {
-            await Task.CompletedTask;
             return (await _repository.GetAll())
                 .Select(bid => bid.AsDto())
                 .ToList();
@@ -38,11 +37,9 @@ namespace OfferApp.Core.Services
 
         public async Task<IReadOnlyList<BidPublishedDto>> GetAllPublishedBids()
         {
-            await Task.CompletedTask;
-            return (await _repository.GetAll())
-                .Where(bid => bid.Published)
-                .Select(bid => bid.AsPublishedDto())
-                .ToList();
+            return (await _repository.GetAllPublished())
+                        .Select(b => b.AsPublishedDto())
+                        .ToList();
         }
 
         public async Task<BidDto?> GetBidById(int id)
@@ -104,7 +101,7 @@ namespace OfferApp.Core.Services
         private async Task<Bid> GetBid(int id)
         {
             var bid = await _repository.Get(id);
-            return bid is null ? throw new OfferException($"Bid with id '{id}' was not found") : bid;
+            return bid is null ? throw new ResourceNotFoundException($"Bid with id '{id}' was not found") : bid;
         }
     }
 }

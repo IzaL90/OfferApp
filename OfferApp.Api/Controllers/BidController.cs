@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OfferApp.Core.DTO;
 using OfferApp.Core.Services;
+using System.Collections;
 
 namespace OfferApp.Api.Controllers
 {
@@ -67,6 +68,12 @@ namespace OfferApp.Api.Controllers
         {
             dto.Id = id;
             return Ok(await _bidService.BidUp(dto));
+        }
+
+        [HttpGet("published")]
+        public async Task<IEnumerable<BidPublishedDto>> GetAllPublished()
+        {
+            return await _bidService.GetAllPublishedBids();
         }
     }
 }

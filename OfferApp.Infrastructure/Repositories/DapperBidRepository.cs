@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace OfferApp.Infrastructure.Repositories
 {
-    internal sealed class DapperBidRepository : IRepository<Bid>
+    internal sealed class DapperBidRepository : IBidRepository
     {
         private readonly IDbConnection _dbConnection;
 
@@ -60,6 +60,15 @@ namespace OfferApp.Infrastructure.Repositories
                 FirstPrice = @FirstPrice, LastPrice = @LastPrice, Published = @Published 
                 WHERE Id = @Id
                 """, entity)) > 0;
+        }
+
+        public async Task<IReadOnlyList<Bid>> GetAllPublished()
+        {
+            return (await _dbConnection.QueryAsync<Bid>("""
+                SELECT Id, Name, Description, Created, Updated, Count, FirstPrice, LastPrice, Published 
+                FROM bids 
+                WHERE Published = 1 
+                """)).ToList();
         }
 
         private static void SetId(Bid bid, int id)
