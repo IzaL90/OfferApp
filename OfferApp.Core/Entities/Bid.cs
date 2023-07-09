@@ -95,7 +95,7 @@ namespace OfferApp.Core.Entities
             {
                 if (FirstPrice > price)
                 {
-                    throw new OfferException($"Price '{price}' cannot be less than {FirstPrice}");
+                    throw new OfferException($"Price '{price}' cannot be less than '{FirstPrice}'");
                 }
 
                 LastPrice = price;
@@ -106,7 +106,12 @@ namespace OfferApp.Core.Entities
 
             if (LastPrice.Value > price)
             {
-                throw new OfferException($"Price '{price}' cannot be less than {LastPrice}");
+                throw new OfferException($"Price '{price}' cannot be less than '{LastPrice}'");
+            }
+
+            if (LastPrice.Value == price)
+            {
+                throw new OfferException($"Price '{price}' cannot same as '{LastPrice}'");
             }
 
             LastPrice = price;

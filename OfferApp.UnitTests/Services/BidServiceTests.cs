@@ -40,7 +40,7 @@ namespace OfferApp.UnitTests.Services
             var exception = await Record.ExceptionAsync(() => _service.DeleteBid(bid.Id));
 
             exception.ShouldNotBeNull();
-            exception.ShouldBeOfType<OfferException>();
+            exception.ShouldBeOfType<ResourceNotFoundException>();
             exception.Message.ShouldContain("was not found");
         }
 
@@ -77,7 +77,7 @@ namespace OfferApp.UnitTests.Services
             var exception = await Record.ExceptionAsync(() => _service.UpdateBid(bid.AsDto()));
 
             exception.ShouldNotBeNull();
-            exception.ShouldBeOfType<OfferException>();
+            exception.ShouldBeOfType<ResourceNotFoundException>();
             exception.Message.ShouldContain("was not found");
         }
 
@@ -89,7 +89,7 @@ namespace OfferApp.UnitTests.Services
             var exception = await Record.ExceptionAsync(() => _service.Published(bid.Id));
 
             exception.ShouldNotBeNull();
-            exception.ShouldBeOfType<OfferException>();
+            exception.ShouldBeOfType<ResourceNotFoundException>();
             exception.Message.ShouldContain("was not found");
         }
 
@@ -123,7 +123,7 @@ namespace OfferApp.UnitTests.Services
             var exception = await Record.ExceptionAsync(() => _service.Unpublished(bid.Id));
 
             exception.ShouldNotBeNull();
-            exception.ShouldBeOfType<OfferException>();
+            exception.ShouldBeOfType<ResourceNotFoundException>();
             exception.Message.ShouldContain("was not found");
         }
 
@@ -158,7 +158,7 @@ namespace OfferApp.UnitTests.Services
             var exception = await Record.ExceptionAsync(() => _service.BidUp(dto));
 
             exception.ShouldNotBeNull();
-            exception.ShouldBeOfType<OfferException>();
+            exception.ShouldBeOfType<ResourceNotFoundException>();
             exception.Message.ShouldContain("was not found");
         }
 
@@ -175,11 +175,11 @@ namespace OfferApp.UnitTests.Services
         }
 
         private readonly IBidService _service;
-        private readonly Mock<IRepository<Bid>> _bidRepository;
+        private readonly Mock<IBidRepository> _bidRepository;
 
         public BidServiceTests()
         {
-            _bidRepository = new Mock<IRepository<Bid>>();
+            _bidRepository = new Mock<IBidRepository>();
             _service = new BidService(_bidRepository.Object);
         }
     }

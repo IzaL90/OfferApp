@@ -205,7 +205,7 @@ namespace OfferApp.UnitTests.Entities
             
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
-            exception.Message.ShouldContain($"cannot be less than {bid.FirstPrice}");
+            exception.Message.ShouldContain($"cannot be less than '{bid.FirstPrice}'");
         }
 
         [Fact]
@@ -218,7 +218,21 @@ namespace OfferApp.UnitTests.Entities
             
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
-            exception.Message.ShouldContain($"cannot be less than {bid.LastPrice}");
+            exception.Message.ShouldContain($"cannot be less than '{bid.LastPrice}'");
+        }
+
+        [Fact]
+        public void GivenPublishedBidWithValueEqualsLastPrice_WhenChangePrice_ShouldThrowAnException()
+        {
+            var bid = Common.CreatePublishedBid();
+            var value = 100000;
+            bid.ChangePrice(value);
+
+            var exception = Record.Exception(() => bid.ChangePrice(value));
+            
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<OfferException>();
+            exception.Message.ShouldContain($"cannot same as '{value}'");
         }
 
         [Fact]

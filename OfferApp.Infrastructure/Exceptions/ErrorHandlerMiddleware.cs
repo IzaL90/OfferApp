@@ -40,6 +40,7 @@ namespace OfferApp.Infrastructure.Exceptions
             => exception switch
             {
                 OfferException ex => new Error((int)HttpStatusCode.BadRequest, ex.Message),
+                ResourceNotFoundException ex => new Error((int)HttpStatusCode.NotFound, ex.Message),
                 _ => new Error((int)HttpStatusCode.InternalServerError, "There was an error")
             };
     }

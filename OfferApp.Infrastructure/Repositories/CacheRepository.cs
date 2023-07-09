@@ -4,12 +4,12 @@ using OfferApp.Infrastructure.Cache;
 
 namespace OfferApp.Infrastructure.Repositories
 {
-    internal sealed class CacheRepository<T> : IRepository<T>
+    internal class CacheRepository<T> : IRepository<T>
         where T : BaseEntity
     {
         private readonly IRepository<T> _innerRepository;
         private readonly ICacheWrapper _cacheWrapper;
-        private Type type = typeof(T);
+        private readonly Type type = typeof(T);
 
         public CacheRepository(IRepository<T> innerRepository, ICacheWrapper cacheWrapper)
         {

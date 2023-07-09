@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace OfferApp.Infrastructure.Repositories
 {
-    internal sealed class XmlRepository<T> : IRepository<T>
+    internal class XmlRepository<T> : IRepository<T>
         where T : BaseEntity
     {
         private readonly string _filePathEntities;

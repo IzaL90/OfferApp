@@ -4,10 +4,10 @@ using System.Reflection;
 
 namespace OfferApp.Infrastructure.Repositories
 {
-    internal sealed class Repository<T> : IRepository<T>
+    internal class Repository<T> : IRepository<T>
         where T : BaseEntity
     {
-        private readonly Dictionary<string, List<T>> _entities = new();
+        protected readonly Dictionary<string, List<T>> _entities = new();
 
         public Task<int> Add(T entity)
         {
