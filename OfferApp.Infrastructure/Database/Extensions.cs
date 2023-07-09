@@ -33,7 +33,7 @@ namespace OfferApp.Infrastructure.Database
             services.AddDapperRepositories();
             services.AddTransient<IDbInitializer, DapperDbInitializer>();
             var databaseOptions = services.GetService<IOptions<DatabaseOptions>>();
-            services.AddMigrations(databaseOptions.Value.ConnectionString!); ;
+            services.AddMigrations(databaseOptions.Value.ConnectionString!);
             services.AddHostedService<DatabaseInitializerService>();
             return services;
         }

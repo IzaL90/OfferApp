@@ -1,4 +1,5 @@
 ﻿using Moq;
+using OfferApp.Core.DTO;
 using OfferApp.Core.Entities;
 using OfferApp.Core.Exceptions;
 using OfferApp.Core.Mappings;
@@ -52,6 +53,20 @@ namespace OfferApp.UnitTests.Services
             await _service.UpdateBid(bid.AsDto());
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
+        }
+
+        [Fact]
+        public async Task PublishedBid_UpdateShouldntBePossible()
+        {
+            var bid = Common.CreatePublishedBid();
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
+
+            var exception = await Record.ExceptionAsync(() => _service.UpdateBid(bid.AsDto()));
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<OfferException>();
+            exception.Message.ShouldContain($"Bid with id '{bid.Id}' is published and cannot be updated");
+            _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Never);
         }
 
         [Fact]
@@ -138,8 +153,9 @@ namespace OfferApp.UnitTests.Services
         public async Task GivenNotExistingBid_WhenBidUp_ShouldThrowAnException()
         {
             var bid = Common.CreateBid();
+            var dto = new BidUpDto { Id = bid.Id, Price = 100000 };
 
-            var exception = await Record.ExceptionAsync(() => _service.BidUp(bid.Id, 100000));
+            var exception = await Record.ExceptionAsync(() => _service.BidUp(dto));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
@@ -151,8 +167,9 @@ namespace OfferApp.UnitTests.Services
         {
             var bid = Common.CreatePublishedBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
+            var dto = new BidUpDto { Id = bid.Id, Price = 100000 };
 
-            await _service.BidUp(bid.Id, 100000);
+            await _service.BidUp(dto);
 
             _bidRepository.Verify(b => b.Update(It.Is<Bid>(bi => bi.Id == bid.Id)), times: Times.Once);
         }

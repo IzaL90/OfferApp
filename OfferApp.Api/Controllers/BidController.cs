@@ -47,5 +47,26 @@ namespace OfferApp.Api.Controllers
             await _bidService.DeleteBid(id);
             return NoContent();
         }
+
+        [HttpPatch("{id:int}/publish")]
+        public async Task<ActionResult> Publish(int id)
+        {
+            var published = await _bidService.Published(id);
+            return published ? NoContent() : BadRequest();
+        }
+        
+        [HttpPatch("{id:int}/unpublish")]
+        public async Task<ActionResult> Unpublish(int id)
+        {
+            var published = await _bidService.Unpublished(id);
+            return published ? NoContent() : BadRequest();
+        }
+
+        [HttpPatch("{id:int}/bid-up")]
+        public async Task<ActionResult> BidUp(int id, BidUpDto dto)
+        {
+            dto.Id = id;
+            return Ok(await _bidService.BidUp(dto));
+        }
     }
 }

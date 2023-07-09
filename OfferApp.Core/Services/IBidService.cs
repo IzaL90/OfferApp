@@ -20,6 +20,6 @@ namespace OfferApp.Core.Services
         
         Task<bool> Unpublished(int id);
 
-        Task<BidPublishedDto> BidUp(int id, decimal price);
+        Task<BidPublishedDto> BidUp(BidUpDto bidUp);
     }
 }
