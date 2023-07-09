@@ -81,6 +81,11 @@ namespace OfferApp.Core.Services
         public async Task<BidDto> UpdateBid(BidDto dto)
         {
             var bid = await GetBid(dto.Id);
+            if (bid.Published)
+            {
+                throw new OfferException($"Bid with id '{dto.Id}' is published and cannot be updated");
+            }
+
             bid.ChangeName(dto.Name);
             bid.ChangeDescription(dto.Description);
             bid.ChangeFirstPrice(dto.FirstPrice);
@@ -88,10 +93,10 @@ namespace OfferApp.Core.Services
             return bid.AsDto();
         }
 
-        public async Task<BidPublishedDto> BidUp(int id, decimal price)
+        public async Task<BidPublishedDto> BidUp(BidUpDto bidUp)
         {
-            var bid = await GetBid(id);
-            bid.ChangePrice(price);
+            var bid = await GetBid(bidUp.Id);
+            bid.ChangePrice(bidUp.Price);
             await _repository.Update(bid);
             return bid.AsPublishedDto();
         }

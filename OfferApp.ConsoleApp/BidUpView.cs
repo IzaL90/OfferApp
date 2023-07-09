@@ -26,7 +26,7 @@ namespace OfferApp.ConsoleApp
             {
                 return;
             }
-            await _bidService.BidUp(bid.Id, bidUpValue.Value);
+            await _bidService.BidUp(new BidUpDto { Id = bid.Id, Price = bidUpValue.Value });
         }
 
         private async Task<BidDto?> GetBid()
