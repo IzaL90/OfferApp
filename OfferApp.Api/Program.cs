@@ -27,3 +27,5 @@ if (args.Contains("--RunMigrations"))
 app.UseInfrastructure();
 
 app.Run();
+
+public partial class Program { }
