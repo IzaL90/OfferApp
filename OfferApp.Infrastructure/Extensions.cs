@@ -13,7 +13,7 @@ namespace OfferApp.Infrastructure
 {
     public static class Extensions
     {
-        #region ConsoleApp
+        #region WebApi
 
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
@@ -92,6 +92,10 @@ namespace OfferApp.Infrastructure
             if (string.IsNullOrWhiteSpace(databaseOptions.ConnectionString))
             {
                 throw new InvalidOperationException("Check in 'database' section 'connectionString' if is correct");
+            }
+            if (string.IsNullOrWhiteSpace(databaseOptions.Version))
+            {
+                throw new InvalidOperationException("Check in 'database' section 'version' if is correct");
             }
             services.AddSingleton(Options.Create(databaseOptions));
             return services;

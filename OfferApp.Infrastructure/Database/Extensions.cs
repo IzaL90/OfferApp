@@ -17,7 +17,7 @@ namespace OfferApp.Infrastructure.Database
         internal static IServiceCollection AddDbContext(this IServiceCollection services)
         {
             var databaseOptions = services.GetService<IOptions<DatabaseOptions>>();
-            var serverVersion = ServerVersion.AutoDetect(databaseOptions.Value.ConnectionString);
+            var serverVersion = new MySqlServerVersion(databaseOptions.Value.Version);
             services.AddDbContext<OfferDbContext>(options => options.UseMySql(databaseOptions.Value.ConnectionString, serverVersion));
             return services;
         }
