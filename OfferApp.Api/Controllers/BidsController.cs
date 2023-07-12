@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OfferApp.Core.DTO;
 using OfferApp.Core.Services;
-using System.Collections;
 
 namespace OfferApp.Api.Controllers
 {
-    public class BidController : BaseController
+    public class BidsController : BaseController
     {
         private readonly IBidService _bidService;
 
-        public BidController(IBidService bidService)
+        public BidsController(IBidService bidService)
         {
             _bidService = bidService;            
         }

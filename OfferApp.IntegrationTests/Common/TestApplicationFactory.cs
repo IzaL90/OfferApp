@@ -42,6 +42,8 @@ namespace OfferApp.IntegrationTests.Common
             }
             services.AddDbContext<OfferDbContext>(options => options.UseInMemoryDatabase(nameof(OfferDbContext)));
             services.AddTransient<IDbInitializer, EFInMemoryDbInitializer>();
+            // background job do tworzenia danych testowych
+            services.AddHostedService<SeedData>();
         }
     }
 }
