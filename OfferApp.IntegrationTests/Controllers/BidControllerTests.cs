@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OfferApp.Core.DTO;
-using OfferApp.Core.Entities;
-using OfferApp.Core.Repositories;
+using OfferApp.Domain.Entities;
+using OfferApp.Domain.Repositories;
 using OfferApp.IntegrationTests.Common;
 using Shouldly;
 using System.Net;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
-using OfferApp.Core.Repositories;
+using OfferApp.Domain.Repositories;
 using OfferApp.Infrastructure.Cache;
 using OfferApp.Infrastructure.Database;
 using System.Data;

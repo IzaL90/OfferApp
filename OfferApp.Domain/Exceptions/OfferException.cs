@@ -1,4 +1,4 @@
-﻿namespace OfferApp.Core.Exceptions
+﻿namespace OfferApp.Domain.Exceptions
 {
     public class OfferException : Exception
     {

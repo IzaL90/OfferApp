@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using OfferApp.Core.Entities;
+﻿using Microsoft.Extensions.Hosting;
+using OfferApp.Domain.Entities;
 using OfferApp.Infrastructure.Database;
 
 namespace OfferApp.IntegrationTests.Common

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OfferApp.Core.Entities;
+using OfferApp.Domain.Entities;
 
 namespace OfferApp.Infrastructure.Database
 {

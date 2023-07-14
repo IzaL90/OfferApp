@@ -1,9 +1,10 @@
 ﻿using Moq;
 using OfferApp.Core.DTO;
-using OfferApp.Core.Entities;
+using OfferApp.Domain.Entities;
+using OfferApp.Domain.Exceptions;
 using OfferApp.Core.Exceptions;
 using OfferApp.Core.Mappings;
-using OfferApp.Core.Repositories;
+using OfferApp.Domain.Repositories;
 using OfferApp.Core.Services;
 using Shouldly;
 
