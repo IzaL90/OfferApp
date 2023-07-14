@@ -81,6 +81,9 @@ namespace OfferApp.Domain.Entities
 
         public void Unpublish()
         {
+            LastPrice = null;
+            Updated = null;
+            Count = 0;
             Published = false;
         }
 

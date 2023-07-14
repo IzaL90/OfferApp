@@ -268,5 +268,20 @@ namespace OfferApp.UnitTests.Entities
             bid.Updated.Value.ShouldBeGreaterThan(dateBeforeChange);
             bid.Updated.Value.ShouldBeLessThan(DateTime.UtcNow);
         }
+
+        [Fact]
+        public void GivenPublishedBid_WhenUnpublish_Should_ClearLastPriceUpdatedAndCount()
+        {
+            var bid = Common.CreatePublishedBid();
+            bid.ChangePrice(100000);
+            var lastCount = bid.Count;
+
+            bid.Unpublish();
+
+            bid.LastPrice.HasValue.ShouldBeFalse();
+            bid.Count.ShouldBeLessThan(lastCount);
+            bid.Count.ShouldBe(0);
+            bid.Updated.HasValue.ShouldBeFalse();
+        }
     }
 }

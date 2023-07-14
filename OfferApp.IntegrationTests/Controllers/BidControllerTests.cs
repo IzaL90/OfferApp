@@ -6,6 +6,7 @@ using OfferApp.IntegrationTests.Common;
 using Shouldly;
 using System.Net;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
 
 namespace OfferApp.IntegrationTests.Controllers
 {
@@ -213,6 +214,31 @@ namespace OfferApp.IntegrationTests.Controllers
             errorModel.Errors["Description"].ShouldNotBeEmpty();
             errorModel.Errors["FirstPrice"].ShouldNotBeEmpty();
             errorModel.Errors["FirstPrice"].ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task GivenPublishedBid_WhenUnpublish_ShouldResetBid()
+        {
+            var bid = await AddDefaultPublishedBid();
+            var dto = new BidUpDto() { Id = bid.Id, Price = bid.FirstPrice + 20000 };
+            await BidUp(dto);
+
+            var response = await Client.PatchAsync($"{PATH}/{bid.Id}/unpublish", null);
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+            var bidUpdated = await _bidRepository.Get(bid.Id);
+            bidUpdated.ShouldNotBeNull();
+            bidUpdated.Published.ShouldBeFalse();
+            bidUpdated.LastPrice.HasValue.ShouldBeFalse();
+            bidUpdated.Updated.HasValue.ShouldBeFalse();
+            bidUpdated.Count.ShouldBe(0);
+        }
+
+        private async Task BidUp(BidUpDto dto)
+        {
+            var response = await Client.PatchAsJsonAsync($"{PATH}/{dto.Id}/bid-up", dto);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         private async Task<Bid> AddPublishedBid(string name, string description, decimal firstPrice)
