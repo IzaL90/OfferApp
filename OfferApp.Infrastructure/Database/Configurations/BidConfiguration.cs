@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OfferApp.Core.Entities;
+using OfferApp.Domain.Entities;
 
 namespace OfferApp.Infrastructure.Database.Configurations
 {

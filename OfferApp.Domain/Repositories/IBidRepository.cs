@@ -1,6 +1,6 @@
-﻿using OfferApp.Core.Entities;
+﻿using OfferApp.Domain.Entities;
 
-namespace OfferApp.Core.Repositories
+namespace OfferApp.Domain.Repositories
 {
     public interface IBidRepository : IRepository<Bid>
     {

@@ -1,4 +1,4 @@
-﻿using OfferApp.Core.Entities;
+﻿using OfferApp.Domain.Entities;
 
 namespace OfferApp.UnitTests
 {

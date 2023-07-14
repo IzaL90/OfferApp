@@ -1,4 +1,4 @@
-﻿namespace OfferApp.Core.Entities
+﻿namespace OfferApp.Domain.Entities
 {
     public class Menu : BaseEntity
     {

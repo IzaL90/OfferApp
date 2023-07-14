@@ -1,5 +1,5 @@
-﻿using OfferApp.Core.Entities;
-using OfferApp.Core.Repositories;
+﻿using OfferApp.Domain.Entities;
+using OfferApp.Domain.Repositories;
 using OfferApp.Infrastructure.Cache;
 
 namespace OfferApp.Infrastructure.Repositories

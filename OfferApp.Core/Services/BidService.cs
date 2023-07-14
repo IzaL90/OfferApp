@@ -1,8 +1,9 @@
 ﻿using OfferApp.Core.DTO;
-using OfferApp.Core.Entities;
 using OfferApp.Core.Exceptions;
+using OfferApp.Domain.Entities;
+using OfferApp.Domain.Exceptions;
 using OfferApp.Core.Mappings;
-using OfferApp.Core.Repositories;
+using OfferApp.Domain.Repositories;
 
 namespace OfferApp.Core.Services
 {

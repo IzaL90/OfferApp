@@ -1,6 +1,6 @@
-﻿using OfferApp.Core.Exceptions;
+﻿using OfferApp.Domain.Exceptions;
 
-namespace OfferApp.Core.Entities
+namespace OfferApp.Domain.Entities
 {
     public class Bid : BaseEntity
     {

@@ -1,5 +1,5 @@
 ﻿using OfferApp.Core.DTO;
-using OfferApp.Core.Entities;
+using OfferApp.Domain.Entities;
 
 namespace OfferApp.Core.Mappings
 {

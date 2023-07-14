@@ -1,5 +1,5 @@
-using OfferApp.Core.Entities;
-using OfferApp.Core.Exceptions;
+using OfferApp.Domain.Entities;
+using OfferApp.Domain.Exceptions;
 using Shouldly;
 
 namespace OfferApp.UnitTests.Entities

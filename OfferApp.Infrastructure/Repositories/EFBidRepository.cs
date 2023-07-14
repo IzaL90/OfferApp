@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OfferApp.Core.Entities;
-using OfferApp.Core.Repositories;
+using OfferApp.Domain.Entities;
+using OfferApp.Domain.Repositories;
 using OfferApp.Infrastructure.Database;
 
 namespace OfferApp.Infrastructure.Repositories

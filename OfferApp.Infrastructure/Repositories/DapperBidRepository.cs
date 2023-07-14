@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using OfferApp.Core.Entities;
-using OfferApp.Core.Repositories;
+using OfferApp.Domain.Entities;
+using OfferApp.Domain.Repositories;
 using System.Data;
 using System.Reflection;
 

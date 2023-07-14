@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using OfferApp.Core.Exceptions;
+using OfferApp.Domain.Exceptions;
 using System.Net;
 
 namespace OfferApp.Infrastructure.Exceptions
