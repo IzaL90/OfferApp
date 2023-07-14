@@ -1,4 +1,6 @@
-﻿using OfferApp.Core.DTO;
+﻿using Microsoft.AspNetCore.Http;
+using OfferApp.Core.DTO;
+using OfferApp.Core.Entities;
 using OfferApp.Core.Repositories;
 using OfferApp.IntegrationTests.Common;
 using Shouldly;
@@ -103,6 +105,129 @@ namespace OfferApp.IntegrationTests.Controllers
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
             var bidDeleted = await _bidRepository.Get(id);
             bidDeleted.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task ShouldGetAllPublished()
+        {
+            await AddDefaultPublishedBid();
+            await AddDefaultPublishedBid();
+
+            var response = await Client.GetAsync($"{PATH}/published");
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var publishedBids = await response.Content.ReadFromJsonAsync<IEnumerable<BidPublishedDto>>();
+            publishedBids.ShouldNotBeNull();
+            publishedBids.ShouldNotBeEmpty();
+            publishedBids.Count().ShouldBeGreaterThan(1);
+        }
+
+        [Fact]
+        public async Task ShouldIncreaseBidLastPrice()
+        {
+            var bid = await AddPublishedBid("Bid#2024", "DescriptionWithLongWord", 10000);
+            var dto = new BidUpDto { Id = bid.Id, Price = 20000 };
+
+            var response = await Client.PatchAsJsonAsync($"{PATH}/{bid.Id}/bid-up", dto);
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var bidChanged = await response.Content.ReadFromJsonAsync<BidPublishedDto>();
+            bidChanged.ShouldNotBeNull();
+            bidChanged.LastPrice.ShouldNotBeNull();
+            bidChanged.LastPrice.Value.ShouldBe(dto.Price);
+            var bidUpdated = await _bidRepository.Get(bid.Id);
+            bidUpdated.ShouldNotBeNull();
+            bidUpdated.LastPrice.ShouldNotBeNull();
+            bidUpdated.LastPrice.Value.ShouldBe(dto.Price);
+        }
+
+        [Fact]
+        public async Task ShouldPublishBid()
+        {
+            var id = 5;
+
+            var response = await Client.PatchAsync($"{PATH}/{id}/publish", null);
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+            var bidUpdated = await _bidRepository.Get(id);
+            bidUpdated.ShouldNotBeNull();
+            bidUpdated.Published.ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task ShouldUnpublishBid()
+        {
+            var bid = await AddDefaultPublishedBid();
+
+            var response = await Client.PatchAsync($"{PATH}/{bid.Id}/unpublish", null);
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+            var bidUpdated = await _bidRepository.Get(bid.Id);
+            bidUpdated.ShouldNotBeNull();
+            bidUpdated.Published.ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task GivenInvalidId_WhenGetBid_ShouldReturnNotFound()
+        {
+            var id = 2000;
+
+            var response = await Client.GetAsync($"{PATH}/{id}");
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GivenInvalidId_WhenUpdateBid_ShouldReturnNotFound()
+        {
+            var bid = new BidDto { Id = 2000, Name = "Name#1", Description = "Description#2024", FirstPrice = 2000 };
+
+            var response = await Client.PutAsJsonAsync($"{PATH}/{bid.Id}", bid);
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GivenInvalidPayload_WhenAddNewBid_ShouldReturnBadRequest()
+        {
+            var dto = new BidDto() { FirstPrice = -200 };
+
+            var response = await Client.PostAsJsonAsync($"{PATH}", dto);
+
+            response.ShouldNotBeNull();
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+            var errorModel = await response.Content.ReadFromJsonAsync<ErrorModel>();
+            errorModel.ShouldNotBeNull();
+            errorModel.Status.ShouldBe(StatusCodes.Status400BadRequest);
+            errorModel.Errors.ShouldNotBeNull();
+            errorModel.Errors.ShouldNotBeEmpty();
+            errorModel.Errors["Name"].ShouldNotBeNull();
+            errorModel.Errors["Name"].ShouldNotBeEmpty();
+            errorModel.Errors["Description"].ShouldNotBeNull();
+            errorModel.Errors["Description"].ShouldNotBeEmpty();
+            errorModel.Errors["FirstPrice"].ShouldNotBeEmpty();
+            errorModel.Errors["FirstPrice"].ShouldNotBeEmpty();
+        }
+
+        private async Task<Bid> AddPublishedBid(string name, string description, decimal firstPrice)
+        {
+            var bid = Bid.Create(name, description, firstPrice);
+            bid.Publish();
+            await _bidRepository.Add(bid);
+            return bid;
+        }
+
+        private async Task<Bid> AddDefaultPublishedBid()
+        {
+            var bid = Fixtures.CreatePublishedBid();
+            await _bidRepository.Add(bid);
+            return bid;
         }
 
         private const string PATH = "api/bids";
