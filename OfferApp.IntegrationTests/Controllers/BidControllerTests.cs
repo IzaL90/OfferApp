@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
-using OfferApp.Core.DTO;
+using OfferApp.Shared.DTO;
 using OfferApp.Domain.Entities;
 using OfferApp.Domain.Repositories;
 using OfferApp.IntegrationTests.Common;
 using Shouldly;
 using System.Net;
 using System.Net.Http.Json;
-using System.Security.Cryptography;
 
 namespace OfferApp.IntegrationTests.Controllers
 {

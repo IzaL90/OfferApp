@@ -1,4 +1,4 @@
-﻿namespace OfferApp.Core.DTO
+﻿namespace OfferApp.Shared.DTO
 {
     public class BidPublishedDto : IBaseDto
     {

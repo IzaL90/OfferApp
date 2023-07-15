@@ -1,4 +1,4 @@
-﻿using OfferApp.Core.DTO;
+﻿using OfferApp.Shared.DTO;
 using OfferApp.Core.Exceptions;
 using OfferApp.Domain.Entities;
 using OfferApp.Domain.Exceptions;

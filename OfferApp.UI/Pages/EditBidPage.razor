@@ -1,0 +1,59 @@
+﻿@page "/bids/edit/{Id:int}"
+@inject IBidService BidService
+@inject NavigationManager NavigationManager
+
+<h3>Edit Bid</h3>
+@if (Loading)
+{
+    <LoadingIconComponent />
+}
+else if (Bid is not null)
+{
+    <BidFormComponent Bid="Bid" OnAdd="HandleValidSubmit" @ref="bidFormComponent" />
+    <div class="mt-2">
+        <button class="btn btn-success me-2" type="button" @onclick="Add" data-name="bid-submit-button">
+            Add
+        </button>
+        <button class="btn btn-secondary" type="button" @onclick='() => NavigationManager.NavigateTo("")' data-name="bid-close-button">
+            Cancel
+        </button>
+    </div>
+}
+else
+{
+    <h5 data-name="bid-not-found-message">Bid with id '@(Id)' was not found</h5>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public BidDto? Bid { get; set; }
+    public bool Loading { get; set; } = true;
+
+    private BidFormComponent? bidFormComponent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetBid();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task HandleValidSubmit(BidDto bidDto)
+    {
+        await BidService.UpdateBid(bidDto);
+        NavigationManager.NavigateTo("");
+    }
+
+    public async Task Add()
+    {
+        await bidFormComponent!.Send();
+    }
+
+    private async Task GetBid()
+    {
+        Loading = true;
+        Bid = await BidService.GetBidById(Id);
+        await Task.Delay(1000);
+        Loading = false;
+    }
+}

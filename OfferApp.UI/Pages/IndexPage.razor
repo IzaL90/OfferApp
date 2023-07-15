@@ -1,0 +1,74 @@
+﻿@page "/"
+@inject IBidService BidService
+
+<PageTitle>Offers</PageTitle>
+
+<h1 data-name="offers-information">Hello, welcome to bid management!</h1>
+
+@if (Loading)
+{
+    <LoadingIconComponent />
+}
+else
+{
+    <div class="mt-2">
+        <div class="mb-2">
+            <AddBidComponent OnAdd="AddBid" />
+        </div>
+        <BidsComponent Bids="bids"OnDelete="DeleteBid" OnPublish="OnPublish" />
+    </div>
+}
+
+@code {
+    public bool Loading { get; set; } = true;
+    private IEnumerable<BidDto> bids = new List<BidDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchBids();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task AddBid(BidDto bidDto)
+    {
+        await BidService.AddBid(bidDto);
+        await FetchBids();
+    }
+
+    private async Task DeleteBid(BidDto bidDto)
+    {
+        if (bidDto is null)
+        {
+            return;
+        }
+
+        await BidService.DeleteBid(bidDto.Id);
+        await FetchBids();
+    }
+
+    private async Task OnPublish(SetBidPublishDto dto)
+    {
+        if (dto is null)
+        {
+            return;
+        }
+
+        if (dto.Published)
+        {
+            await BidService.Published(dto.Id);
+        }
+        else
+        {
+            await BidService.Unpublished(dto.Id);
+        }
+        await FetchBids();
+    }
+
+    private async Task FetchBids()
+    {
+        Loading = true;
+        bids = await BidService.GetAllBids();
+        await Task.Delay(1000);
+        Loading = false;
+    }
+}

@@ -1,0 +1,62 @@
+﻿@using Blazored.FluentValidation
+
+<button class="btn btn-primary" @onclick="OpenModal" data-name="bid-add-button">
+    Add
+    <span class="oi oi-task"></span>
+</button>
+
+@if (IsModalOpen)
+{
+    <ModalComponent Title="Create Bid" OnClose="CloseModal">
+        <Content>
+            <div>
+                <div class="modal-body">
+                    <BidFormComponent Bid="Bid" OnAdd="HandleValidSubmit" @ref="bidFormComponent" />
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button class="btn btn-success me-2" type="button" @onclick="Add" data-name="bid-submit-button">
+                            Add
+                        </button>
+                        <button class="btn btn-secondary" type="button" @onclick="CloseModal" data-name="bid-close-button">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+             </div>
+        </Content>
+    </ModalComponent>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<BidDto> OnAdd { get; set; }
+
+    public bool IsModalOpen { get; private set; } = false;
+
+    private BidFormComponent? bidFormComponent;
+
+    public void OpenModal()
+    {
+        IsModalOpen = true;
+    }
+
+    public async Task Add()
+    {
+        await bidFormComponent!.Send();
+    }
+
+    public void CloseModal()
+    {
+        IsModalOpen = false;
+        Bid = new BidDto();
+    }
+
+    public BidDto Bid { get; private set; } = new();
+
+    private async Task HandleValidSubmit(BidDto bidDto)
+    {
+        await OnAdd.InvokeAsync(bidDto);
+        CloseModal();
+    }
+}

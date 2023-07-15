@@ -1,0 +1,64 @@
+﻿@page "/bids/published"
+@inject IBidService BidService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Offers</PageTitle>
+
+<h1 data-name="offers-information">Hello, welcome to bid management!</h1>
+
+@if (Loading)
+{
+    <LoadingIconComponent />
+}
+else
+{
+    <div class="mt-2">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (bids is not null)
+                {
+                    @foreach (var bid in bids)
+                    {
+                        <tr data-name="bid-row-action-@(bid.Id)">
+                            <th scope="row">@bid.Id</th>
+                            <td>@bid.Name</td>
+                            <td>@(bid.LastPrice.HasValue ? bid.LastPrice.Value : bid.FirstPrice)</td>
+                            <td>@(bid.Updated.HasValue ? bid.Updated.Value : null)</td>
+                            <td @onclick:stopPropagation="true">
+                                <span class="oi oi-dollar icon-click dollar-color me-2" title="Let's bid" @onclick='() => NavigationManager.NavigateTo($"/bids/bid-up/{bid.Id}")' data-name="bid-@(bid.Id)-bid-up-action"></span>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    public bool Loading { get; set; } = true;
+    private IEnumerable<BidPublishedDto> bids = new List<BidPublishedDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchBids();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task FetchBids()
+    {
+        Loading = true;
+        bids = await BidService.GetAllPublishedBids();
+        await Task.Delay(1000);
+        Loading = false;
+    }
+}

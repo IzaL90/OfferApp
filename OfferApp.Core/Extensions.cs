@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using OfferApp.Core.DTO;
+using OfferApp.Shared.DTO;
 using OfferApp.Core.Services;
 using System.Runtime.CompilerServices;
 

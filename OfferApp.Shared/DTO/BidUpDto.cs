@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace OfferApp.Core.DTO
+namespace OfferApp.Shared.DTO
 {
     public class BidUpDto
     {

@@ -1,0 +1,53 @@
+﻿@using Blazored.FluentValidation
+
+<EditForm Model="@Bid" OnValidSubmit="@HandleValidSubmit">
+    <FluentValidationValidator @ref="fluentValidationValidator" />
+    <div>
+        <div class="form-group mt-2">
+            <label data-name="bid-name-label">Name</label>
+            <InputText class="form-control" @bind-Value="Bid.Name" data-name="bid-name-input" />
+            <ValidationMessage For="@(() => Bid.Name)" data-name="bid-name-validation" />
+        </div>
+        <div class="form-group mt-2">
+            <label data-name="bid-first-price-label">Price</label>
+            <InputNumber class="form-control" @bind-Value="Bid.FirstPrice" data-name="bid-first-price-input" />
+            <ValidationMessage For="@(() => Bid.FirstPrice)" data-name="bid-first-price-validation" />
+        </div>
+        <div class="form-group mt-2">
+            <label data-name="bid-description-label">Description</label>
+            <InputTextArea class="form-control" @bind-Value="Bid.Description" data-name="bid-description-input" />
+            <ValidationMessage For="@(() => Bid.Description)" data-name="bid-description-validation"/>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public BidDto Bid { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<BidDto> OnAdd { get; set; }
+
+    private FluentValidationValidator? fluentValidationValidator;
+
+    public async Task Send()
+    {
+        if (!await fluentValidationValidator!.ValidateAsync())
+        {
+            return;
+        }
+
+        await HandleValidSubmit();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await OnAdd.InvokeAsync(new BidDto
+        {
+            Id = Bid.Id,
+            Name = Bid.Name,
+            FirstPrice = Bid.FirstPrice,
+            Description = Bid.Description
+        });
+    }
+}

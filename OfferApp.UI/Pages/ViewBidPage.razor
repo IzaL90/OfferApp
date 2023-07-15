@@ -1,0 +1,75 @@
+﻿@page "/bids/view/{Id:int}"
+@inject IBidService BidService
+
+@if (Loading)
+{
+    <LoadingIconComponent />
+}
+else if (bid is null)
+{
+    <h5 data-name="bid-not-found-message">Bid with id '@(Id)' was not found</h5>
+}
+else
+{
+    <h3 data-name="bid-name-header-text">Bid @(bid.Name)</h3>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="bid-description-label">
+            Description
+        </label>
+        <textarea class="form-control" readonly data-name="bid-description-input">
+            @bid.Description
+            </textarea>
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="bid-first-price-label">
+            First Price
+        </label>
+        <input type="text" class="form-control" value="@bid.FirstPrice" readonly data-name="bid-first-price-input" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="bid-published-label">
+            Published
+        </label>
+        <input type="text" class="form-control" value="@(bid.Published ? "Yes" : "No")" readonly data-name="bid-published-input" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="bid-created-label">
+            Created
+        </label>
+        <input type="text" class="form-control" readonly value="@bid.Created" data-name="bid-created-input" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="bid-last-price-label">
+            Last Price
+        </label>
+        <input type="number" class="form-control" readonly value="@bid.LastPrice.GetValueOrDefault()" data-name="bid-last-price-input" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="bid-count-label">
+            Count
+        </label>
+        <input type="number" class="form-control" readonly value="@bid.Count" data-name="bid-count-input" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="bid-updated-label">
+            Updated
+        </label>
+        <input type="text" class="form-control" readonly value="@(bid.Updated.HasValue ? bid.Updated.Value : null)" data-name="bid-updated-input" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public bool Loading { get; set; }
+
+    private BidDto? bid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bid = await BidService.GetBidById(Id);
+        await Task.Delay(1000);
+        Loading = false;
+    }
+}

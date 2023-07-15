@@ -1,5 +1,5 @@
 ﻿using Moq;
-using OfferApp.Core.DTO;
+using OfferApp.Shared.DTO;
 using OfferApp.Domain.Entities;
 using OfferApp.Domain.Exceptions;
 using OfferApp.Core.Exceptions;
