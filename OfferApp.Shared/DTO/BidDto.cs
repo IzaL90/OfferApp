@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace OfferApp.Core.DTO
+namespace OfferApp.Shared.DTO
 {
     public class BidDto : IBaseDto
     {
@@ -26,8 +26,8 @@ namespace OfferApp.Core.DTO
     {
         public BidValidator()
         {
-            RuleFor(b => b.Name).MinimumLength(4).MaximumLength(150);
-            RuleFor(bid => bid.Description).MinimumLength(10).MaximumLength(3000);
+            RuleFor(b => b.Name).MinimumLength(4).MaximumLength(150).NotEmpty();
+            RuleFor(bid => bid.Description).MinimumLength(10).MaximumLength(3000).NotEmpty();
             RuleFor(bid => bid.FirstPrice).GreaterThanOrEqualTo(0);
 
             When(b => !string.IsNullOrWhiteSpace(b.Description), () =>

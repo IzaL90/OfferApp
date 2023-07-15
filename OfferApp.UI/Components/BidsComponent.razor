@@ -1,0 +1,123 @@
+﻿@inject NavigationManager NavigationManager
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Created</th>
+            <th scope="col">Published</th>
+            <th scope="col">FirstPrice</th>
+            <th scope="col">LastPrice</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Bids is not null)
+        {
+            @foreach (var bid in Bids)
+            {
+                @if (BidClicked?.Id == bid.Id)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            @if (!bid.Published)
+                            {
+                                <button class="btn btn-warning" @onclick='async () => await SetPublishBid(bid.Id, true)' data-name="bid-set-as-publish-button">Publish</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary" @onclick='async () => await SetPublishBid(bid.Id, false)' data-name="bid-set-as-unpublish-button">Unpublish</button>
+                            }
+                        </td>
+                    </tr>
+                }
+                <tr class="@(bid.Published ? "table-warning" : "table-primary")" @onclick="() => OnClickedBid(bid)"
+                    data-name="bid-row-action-@(bid.Id)">
+                    <th scope="row">@bid.Id</th>
+                    <td>@bid.Name</td>
+                    <td>@bid.Created</td>
+                    <td>@bid.Published</td>
+                    <td>@bid.FirstPrice</td>
+                    <td>@bid.LastPrice</td>
+                    <td @onclick:stopPropagation="true">
+                        <span class="oi oi-magnifying-glass icon-click me-2" title="View" @onclick='() => NavigationManager.NavigateTo($"/bids/view/{bid.Id}")' data-name="bid-@(bid.Id)-view-action"></span>
+                        <span class="oi oi-pencil icon-click me-2" title="Edit" @onclick='() => NavigationManager.NavigateTo($"/bids/edit/{bid.Id}")' data-name="bid-@(bid.Id)-edit-action"></span>
+                        <span class="oi oi-trash icon-click" title="Delete" @onclick="() => OpenDeleteBidModal(bid)" data-name="bid-@(bid.Id)-delete-action"></span>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+@if (IsBidToDelete)
+{
+    <ModalComponent Title="Delete Bid" OnClose="CloseDeleteBidModal">
+        <Content>
+            <div class="modal-body" data-name="quest-delete-action-body">
+                Do you wish to delete bid @(BidToDelete?.Name)
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-danger me-2" @onclick="() => ConfirmDeleteBid(BidToDelete!)" data-name="bid-delete-action-confirm">
+                        Yes
+                    </button>
+                    <button class="btn btn-secondary" @onclick="CloseDeleteBidModal" data-name="bid-delete-action-cancel">
+                        No
+                    </button>
+                </div>
+            </div>
+        </Content>
+    </ModalComponent>
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<BidDto>? Bids { get; set; }
+
+    [Parameter]
+    public EventCallback<BidDto> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<SetBidPublishDto> OnPublish { get; set; }
+
+    public BidDto? BidClicked { get; private set; }
+    public bool IsBidToDelete { get; private set; }
+    public BidDto? BidToDelete { get; private set; }
+
+    public void OnClickedBid(BidDto bidDto)
+    {
+        if (BidClicked?.Id == bidDto.Id)
+        {
+            BidClicked = null;
+            return;
+        }
+
+        BidClicked = bidDto;
+    }
+
+    public void OpenDeleteBidModal(BidDto bidDto)
+    {
+        BidToDelete = bidDto;
+        IsBidToDelete = true;
+    }
+
+    public void CloseDeleteBidModal()
+    {
+        BidToDelete = null;
+        IsBidToDelete = false;
+    }
+
+    private async Task ConfirmDeleteBid(BidDto bidDto)
+    {
+        CloseDeleteBidModal();
+        await OnDelete.InvokeAsync(bidDto);
+    }
+
+    public async Task SetPublishBid(int id, bool publishStatus)
+    {
+        await OnPublish.InvokeAsync(new SetBidPublishDto(id, publishStatus));
+    }
+}

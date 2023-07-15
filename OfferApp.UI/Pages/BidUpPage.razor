@@ -1,0 +1,85 @@
+﻿@page "/bids/bid-up/{Id:int}"
+@inject IBidService BidService
+@inject NavigationManager NavigationManager
+
+<h3>Bid Up</h3>
+
+@if (Loading)
+{
+    <LoadingIconComponent />
+}
+else if (bid is not null)
+{
+    <div class="mt-2">
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <ErrorComponent Text="@error" />
+        }
+        <div class="mt-2 form-group">
+            <label data-name="bid-up-label">Last Price</label>
+            <InputNumber @bind-Value="lastBidPrice" class="form-control" data-name="bid-up-input-value" />
+        </div>
+        <div class="mt-2">
+            <button class="btn btn-success" data-name="bid-up-button-accept" @onclick="BidUp">
+                Bid Up
+            </button>
+            <button class="btn btn-secondary" data-name="bid-up-button-cancel" @onclick='() => NavigationManager.NavigateTo("/bids/published")'>
+                Cancel
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <h5 data-name="bid-not-found-message">Bid with id '@(Id)' was not found</h5>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public bool Loading { get; set; } = true;
+
+    private BidDto? bid;
+    private decimal lastBidPrice = 0;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchBid();
+        if (bid is not null)
+        {
+            lastBidPrice = bid.LastPrice.HasValue ? bid.LastPrice.Value : bid.FirstPrice;
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task BidUp()
+    {
+        try
+        {
+            await BidService.BidUp(new BidUpDto { Id = Id, Price = lastBidPrice });
+            NavigationManager.NavigateTo("/bids/published");
+        }
+        catch (Exception exception)
+        {
+            if (exception is InvalidOperationException)
+            {
+                error = exception.Message;
+            }
+            else
+            {
+                error = "Something bad happen, please try again";
+            }
+        }
+    }
+
+    private async Task FetchBid()
+    {
+        Loading = true;
+        bid = await BidService.GetBidById(Id);
+        await Task.Delay(1000);
+        Loading = false;
+    }
+}

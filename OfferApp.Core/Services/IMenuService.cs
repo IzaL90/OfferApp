@@ -1,4 +1,4 @@
-﻿using OfferApp.Core.DTO;
+﻿using OfferApp.Shared.DTO;
 
 namespace OfferApp.Core.Services
 {

@@ -1,8 +1,8 @@
 ﻿using OfferApp.Shared.DTO;
 
-namespace OfferApp.Core.Services
+namespace OfferApp.UI.Services
 {
-    public interface IBidService : IService
+    public interface IBidService
     {
         Task<BidDto> AddBid(BidDto dto);
 
@@ -17,7 +17,7 @@ namespace OfferApp.Core.Services
         Task<IReadOnlyList<BidPublishedDto>> GetAllPublishedBids();
 
         Task<bool> Published(int id);
-        
+
         Task<bool> Unpublished(int id);
 
         Task<BidPublishedDto> BidUp(BidUpDto bidUp);

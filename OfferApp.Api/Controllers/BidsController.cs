@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OfferApp.Core.DTO;
+using OfferApp.Shared.DTO;
 using OfferApp.Core.Services;
 
 namespace OfferApp.Api.Controllers

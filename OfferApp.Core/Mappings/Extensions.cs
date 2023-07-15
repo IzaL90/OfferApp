@@ -1,4 +1,4 @@
-﻿using OfferApp.Core.DTO;
+﻿using OfferApp.Shared.DTO;
 using OfferApp.Domain.Entities;
 
 namespace OfferApp.Core.Mappings

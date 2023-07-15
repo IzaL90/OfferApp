@@ -1,0 +1,13 @@
+﻿<div class="alert alert-danger">
+    @if (!string.IsNullOrWhiteSpace(Text))
+    {
+        <span data-name="error-value">
+            @Text
+        </span>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? Text { get; set; }
+}
