@@ -1,5 +1,6 @@
 using OfferApp.Domain.Entities;
 using OfferApp.Domain.Exceptions;
+using OfferApp.Shared.Tests;
 using Shouldly;
 
 namespace OfferApp.UnitTests.Entities
@@ -55,7 +56,7 @@ namespace OfferApp.UnitTests.Entities
         public void GivenPublishedBid_WhenChangeBidName_ShouldThrowAnException()
         {
             var name = "abc12345";
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
 
             var exception = Record.Exception(() => bid.ChangeName(name));
 
@@ -67,7 +68,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void ShouldChangeBidName()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             var name = "test12345";
 
             bid.ChangeName(name);
@@ -109,7 +110,7 @@ namespace OfferApp.UnitTests.Entities
         public void GivenPublishedBid_WhenChangeBidDescription_ShouldThrowAnException()
         {
             var description = "description12345";
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
 
             var exception = Record.Exception(() => bid.ChangeDescription(description));
 
@@ -121,7 +122,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void ShouldChangeBidDescription()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             var description = "abc12345-test12345";
 
             bid.ChangeDescription(description);
@@ -151,7 +152,7 @@ namespace OfferApp.UnitTests.Entities
         [InlineData(-100)]
         public void GivenNegativeFirstPrice_WhenChangeBidFirstPrice_ShouldThrowAnException(decimal firstPrice)
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
 
             var exception = Record.Exception(() => bid.ChangeFirstPrice(firstPrice));
 
@@ -164,7 +165,7 @@ namespace OfferApp.UnitTests.Entities
         public void GivenPublishedBid_WhenChangeBidFirstPrice_ShouldThrowAnException()
         {
             var firstPrice = 200000;
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
 
             var exception = Record.Exception(() => bid.ChangeFirstPrice(firstPrice));
 
@@ -177,7 +178,7 @@ namespace OfferApp.UnitTests.Entities
         public void ShouldChangeBidFirstPrice()
         {
             var firstPrice = 200000;
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
 
             bid.ChangeFirstPrice(firstPrice);
 
@@ -187,7 +188,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void GivenNotPublishedBid_WhenChangePrice_ShouldThrowAnException()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
 
             var exception = Record.Exception(() => bid.ChangePrice(100));
 
@@ -199,7 +200,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void GivenPublishedBidWithFirstPriceAndValueLessThanFirstPrice_WhenChangePrice_ShouldThrowAnException()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
 
             var exception = Record.Exception(() => bid.ChangePrice(bid.FirstPrice - 1));
             
@@ -211,7 +212,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void GivenPublishedBidWithValueLessThanLastPrice_WhenChangePrice_ShouldThrowAnException()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             bid.ChangePrice(100000);
 
             var exception = Record.Exception(() => bid.ChangePrice(10));
@@ -224,7 +225,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void GivenPublishedBidWithValueEqualsLastPrice_WhenChangePrice_ShouldThrowAnException()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             var value = 100000;
             bid.ChangePrice(value);
 
@@ -238,7 +239,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void GivenPublishedBid_WhenChangePrice_ShouldSetNewLastPrice()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             var price = 100000;
             var dateBeforeChange = DateTime.UtcNow;
 
@@ -254,7 +255,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void GivenPublishedBidWithSetLastPrice_WhenChangePrice_ShouldSetNewLastPrice()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             var price = 100000;
             bid.ChangePrice(price);
             var newPrice = price + 10;
@@ -272,7 +273,7 @@ namespace OfferApp.UnitTests.Entities
         [Fact]
         public void GivenPublishedBid_WhenUnpublish_Should_ClearLastPriceUpdatedAndCount()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             bid.ChangePrice(100000);
             var lastCount = bid.Count;
 

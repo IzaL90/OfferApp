@@ -6,6 +6,7 @@ using OfferApp.IntegrationTests.Common;
 using Shouldly;
 using System.Net;
 using System.Net.Http.Json;
+using OfferApp.Shared.Tests;
 
 namespace OfferApp.IntegrationTests.Controllers
 {
