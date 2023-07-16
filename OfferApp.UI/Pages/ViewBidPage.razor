@@ -69,7 +69,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         bid = await BidService.GetBidById(Id);
-        await Task.Delay(1000);
         Loading = false;
     }
 }

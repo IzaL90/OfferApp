@@ -1,4 +1,5 @@
 ﻿using OfferApp.Domain.Entities;
+using OfferApp.Shared.DTO;
 
 namespace OfferApp.Shared.Tests
 {
