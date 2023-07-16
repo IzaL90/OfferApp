@@ -68,7 +68,6 @@ else
     {
         Loading = true;
         bids = await BidService.GetAllBids();
-        await Task.Delay(1000);
         Loading = false;
     }
 }

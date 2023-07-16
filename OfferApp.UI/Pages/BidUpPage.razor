@@ -10,24 +10,31 @@
 }
 else if (bid is not null)
 {
-    <div class="mt-2">
-        @if (!string.IsNullOrWhiteSpace(error))
-        {
-            <ErrorComponent Text="@error" />
-        }
-        <div class="mt-2 form-group">
-            <label data-name="bid-up-label">Last Price</label>
-            <InputNumber @bind-Value="lastBidPrice" class="form-control" data-name="bid-up-input-value" />
+    @if (bid.Published)
+    {
+        <div class="mt-2" data-name="bid-up-form">
+            @if (!string.IsNullOrWhiteSpace(error))
+            {
+                <ErrorComponent Text="@error" />
+            }
+            <div class="mt-2 form-group">
+                <label data-name="bid-up-label">Last Price</label>
+                <InputNumber @bind-Value="lastBidPrice" class="form-control" data-name="bid-up-input-value" />
+            </div>
+            <div class="mt-2">
+                <button class="btn btn-success" data-name="bid-up-button-accept" @onclick="BidUp">
+                    Bid Up
+                </button>
+                <button class="btn btn-secondary" data-name="bid-up-button-cancel" @onclick='() => NavigationManager.NavigateTo("/bids/published")'>
+                    Cancel
+                </button>
+            </div>
         </div>
-        <div class="mt-2">
-            <button class="btn btn-success" data-name="bid-up-button-accept" @onclick="BidUp">
-                Bid Up
-            </button>
-            <button class="btn btn-secondary" data-name="bid-up-button-cancel" @onclick='() => NavigationManager.NavigateTo("/bids/published")'>
-                Cancel
-            </button>
-        </div>
-    </div>
+    }
+    else
+    {
+        <h5 data-name="bid-not-published-message">Bid with id '@(Id)' is not published</h5>
+    }
 }
 else
 {
@@ -79,7 +86,6 @@ else
     {
         Loading = true;
         bid = await BidService.GetBidById(Id);
-        await Task.Delay(1000);
         Loading = false;
     }
 }

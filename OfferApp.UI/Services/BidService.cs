@@ -54,20 +54,23 @@ namespace OfferApp.UI.Services
         public async Task<IReadOnlyList<BidDto>> GetAllBids()
         {
             await Task.CompletedTask;
+            await Task.Delay(1000);
             return _bids;
         }
 
         public async Task<IReadOnlyList<BidPublishedDto>> GetAllPublishedBids()
         {
             await Task.CompletedTask;
+            await Task.Delay(1000);
             return _bids.Where(b => b.Published)
                         .Select(CreateBidPublished)
                         .ToList();
         }
 
-        public Task<BidDto?> GetBidById(int id)
+        public async Task<BidDto?> GetBidById(int id)
         {
-            return Task.FromResult(_bids.FirstOrDefault(b => b.Id == id));
+            await Task.Delay(1000);
+            return _bids.FirstOrDefault(b => b.Id == id);
         }
 
         public async Task<bool> Published(int id)
