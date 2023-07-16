@@ -7,6 +7,7 @@ using OfferApp.Core.Mappings;
 using OfferApp.Domain.Repositories;
 using OfferApp.Core.Services;
 using Shouldly;
+using OfferApp.Shared.Tests;
 
 namespace OfferApp.UnitTests.Services
 {
@@ -15,7 +16,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task ShouldAddBid()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
 
             await _service.AddBid(bid.AsDto());
 
@@ -25,7 +26,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task ShouldDeleteBid()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
             await _service.DeleteBid(bid.Id);
@@ -36,7 +37,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task GivenNotExistingBid_WhenDeleteBid_ShouldThrowAnException()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             
             var exception = await Record.ExceptionAsync(() => _service.DeleteBid(bid.Id));
 
@@ -48,7 +49,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task ShouldUpdateBid()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
             await _service.UpdateBid(bid.AsDto());
@@ -59,7 +60,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task PublishedBid_UpdateShouldntBePossible()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
             var exception = await Record.ExceptionAsync(() => _service.UpdateBid(bid.AsDto()));
@@ -73,7 +74,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task GivenNotExistingBid_WhenUpdateBid_ShouldThrowAnException()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             
             var exception = await Record.ExceptionAsync(() => _service.UpdateBid(bid.AsDto()));
 
@@ -85,7 +86,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task GivenNotExistingBid_WhenPublishedBid_ShouldThrowAnException()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
 
             var exception = await Record.ExceptionAsync(() => _service.Published(bid.Id));
 
@@ -97,7 +98,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task ShouldChangeBidToPublished()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
             await _service.Published(bid.Id);
@@ -108,7 +109,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task GivenBidPublished_WhenPublishedBid_ShouldntUpdateBid()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
             await _service.Published(bid.Id);
@@ -119,7 +120,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task GivenNotExistingBid_WhenUnpublishedBid_ShouldThrowAnException()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
 
             var exception = await Record.ExceptionAsync(() => _service.Unpublished(bid.Id));
 
@@ -131,7 +132,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task ShouldChangeBidToUnpublished()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
             await _service.Unpublished(bid.Id);
@@ -142,7 +143,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task GivenBidUnpublished_WhenUnpublishedBid_ShouldntUpdateBid()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
 
             await _service.Unpublished(bid.Id);
@@ -153,7 +154,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task GivenNotExistingBid_WhenBidUp_ShouldThrowAnException()
         {
-            var bid = Common.CreateBid();
+            var bid = Fixtures.CreateBid();
             var dto = new BidUpDto { Id = bid.Id, Price = 100000 };
 
             var exception = await Record.ExceptionAsync(() => _service.BidUp(dto));
@@ -166,7 +167,7 @@ namespace OfferApp.UnitTests.Services
         [Fact]
         public async Task ShouldBidUp()
         {
-            var bid = Common.CreatePublishedBid();
+            var bid = Fixtures.CreatePublishedBid();
             _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
             var dto = new BidUpDto { Id = bid.Id, Price = 100000 };
 

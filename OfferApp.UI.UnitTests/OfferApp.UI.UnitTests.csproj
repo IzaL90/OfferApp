@@ -10,8 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.8" />
+    <PackageReference Include="bunit" Version="1.21.9" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
     <PackageReference Include="xunit" Version="2.5.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
@@ -25,8 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OfferApp.Api\OfferApp.Api.csproj" />
     <ProjectReference Include="..\OfferApp.Shared.Tests\OfferApp.Shared.Tests.csproj" />
+    <ProjectReference Include="..\OfferApp.UI\OfferApp.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿using OfferApp.Domain.Entities;
 
-namespace OfferApp.IntegrationTests.Common
+namespace OfferApp.Shared.Tests
 {
-    internal static class Fixtures
+    public static class Fixtures
     {
         public static Bid CreateBid()
         {
