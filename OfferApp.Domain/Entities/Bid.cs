@@ -114,7 +114,7 @@ namespace OfferApp.Domain.Entities
 
             if (LastPrice.Value == price)
             {
-                throw new OfferException($"Price '{price}' cannot same as '{LastPrice}'");
+                throw new OfferException($"Price '{price}' cannot be same as '{LastPrice}'");
             }
 
             LastPrice = price;

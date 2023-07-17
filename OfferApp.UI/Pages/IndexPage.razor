@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject IBidService BidService
+@inject ILogger<IndexPage> Logger
 
 <PageTitle>Offers</PageTitle>
 
@@ -17,11 +18,34 @@ else
         </div>
         <BidsComponent Bids="bids"OnDelete="DeleteBid" OnPublish="OnPublish" />
     </div>
+    @if (showErrorPublishingBid)
+    {
+        <ModalComponent Title="Error" OnClose="ClosePublishingErrorModal">
+            <Content>
+                <div>
+                    <div class="modal-body" data-name="bid-publishing-error-text">
+                        <ErrorComponent Text="@errorPublisher" />
+                    </div>
+                    <div class="modal-footer">
+                        <div>
+                            <button class="btn btn-secondary" type="button" @onclick="ClosePublishingErrorModal" data-name="bid-publishing-error-close-button">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Content>
+        </ModalComponent>
+    }
 }
 
 @code {
     public bool Loading { get; set; } = true;
     private IEnumerable<BidDto> bids = new List<BidDto>();
+    private bool showErrorPublishingBid = false;
+    private string? addError;
+    private string? deleteError;
+    private string? errorPublisher;
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,7 +55,23 @@ else
 
     private async Task AddBid(BidDto bidDto)
     {
-        await BidService.AddBid(bidDto);
+        try
+        {
+            addError = null;
+            await BidService.AddBid(bidDto);
+        }
+        catch(Exception exception)
+        {
+            if (exception is InvalidOperationException)
+            {
+                addError = exception.Message;
+            }
+            else
+            {
+                addError = "Something bad happen, please try again";
+            }
+            Logger.LogError(exception, exception.Message);
+        }
         await FetchBids();
     }
 
@@ -42,7 +82,22 @@ else
             return;
         }
 
-        await BidService.DeleteBid(bidDto.Id);
+        try
+        {
+            await BidService.DeleteBid(bidDto.Id);
+        }
+        catch (Exception exception)
+        {
+            if (exception is InvalidOperationException)
+            {
+                deleteError = exception.Message;
+            }
+            else
+            {
+                deleteError = "Something bad happen, please try again";
+            }
+            Logger.LogError(exception, exception.Message);
+        }
         await FetchBids();
     }
 
@@ -55,11 +110,43 @@ else
 
         if (dto.Published)
         {
-            await BidService.Published(dto.Id);
+            try
+            {
+                await BidService.Published(dto.Id);
+            }
+            catch (Exception exception)
+            {
+                if (exception is InvalidOperationException)
+                {
+                    errorPublisher = exception.Message;
+                }
+                else
+                {
+                    errorPublisher = "Something bad happen, please try again";
+                }
+                OpenPublishingErrorModal();
+                Logger.LogError(exception, exception.Message);
+            }
         }
         else
         {
-            await BidService.Unpublished(dto.Id);
+            try
+            {
+                await BidService.Unpublished(dto.Id);
+            }
+            catch (Exception exception)
+            {
+                if (exception is InvalidOperationException)
+                {
+                    errorPublisher = exception.Message;
+                }
+                else
+                {
+                    errorPublisher = "Something bad happen, please try again";
+                }
+                OpenPublishingErrorModal();
+                Logger.LogError(exception, exception.Message);
+            }
         }
         await FetchBids();
     }
@@ -67,7 +154,25 @@ else
     private async Task FetchBids()
     {
         Loading = true;
-        bids = await BidService.GetAllBids();
+        try
+        {
+            bids = await BidService.GetAllBids();            
+        }
+        catch(Exception exception)
+        {
+            Logger.LogError(exception, exception.Message);
+        }
         Loading = false;
+    }
+
+    private void OpenPublishingErrorModal()
+    {
+        showErrorPublishingBid = true;
+    }
+
+    private void ClosePublishingErrorModal()
+    {
+        showErrorPublishingBid = false;
+        errorPublisher = null;
     }
 }

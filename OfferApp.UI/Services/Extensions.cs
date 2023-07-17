@@ -4,7 +4,7 @@
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            return services.AddSingleton<IBidService, BidService>();
+            return services.AddScoped<IBidService, BidService>();
         }
     }
 }

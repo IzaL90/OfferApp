@@ -1,5 +1,6 @@
 ﻿@page "/bids/view/{Id:int}"
 @inject IBidService BidService
+@inject ILogger<ViewBidPage> Logger
 
 @if (Loading)
 {
@@ -68,7 +69,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        bid = await BidService.GetBidById(Id);
+        try
+        {
+            bid = await BidService.GetBidById(Id);
+        }
+        catch(Exception exception)
+        {
+            Logger.LogError(exception, exception.Message);
+        }
         Loading = false;
     }
 }
