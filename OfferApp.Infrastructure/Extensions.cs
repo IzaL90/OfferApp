@@ -15,6 +15,8 @@ namespace OfferApp.Infrastructure
     {
         #region WebApi
 
+        private const string CORS_POLICY = "OfferAppCorsPolicy";
+
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.RegisterOptions(configuration);
@@ -23,6 +25,12 @@ namespace OfferApp.Infrastructure
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddErrorHandling();
+            services.AddCors(cors => cors.AddPolicy(CORS_POLICY, policy =>
+            {
+                policy.WithOrigins(configuration.GetValue<string>("frontend") ?? throw new InvalidOperationException("frontend url should be provided"));
+                policy.WithMethods("POST", "PUT", "PATCH", "DELETE");
+                policy.WithHeaders("content-type");
+            }));
             return services;
         }
 
@@ -41,6 +49,7 @@ namespace OfferApp.Infrastructure
                 app.UseSwaggerUI();
             }
 
+            app.UseCors(CORS_POLICY);
             app.UseAuthorization();
             app.UseErrorHandling();
             app.MapControllers();

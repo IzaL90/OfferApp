@@ -233,7 +233,7 @@ namespace OfferApp.UnitTests.Entities
             
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<OfferException>();
-            exception.Message.ShouldContain($"cannot same as '{value}'");
+            exception.Message.ShouldContain($"cannot be same as '{value}'");
         }
 
         [Fact]

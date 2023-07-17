@@ -1,6 +1,7 @@
 ﻿@page "/bids/bid-up/{Id:int}"
 @inject IBidService BidService
 @inject NavigationManager NavigationManager
+@inject ILogger<BidUpPage> Logger
 
 <h3>Bid Up</h3>
 
@@ -13,10 +14,7 @@ else if (bid is not null)
     @if (bid.Published)
     {
         <div class="mt-2" data-name="bid-up-form">
-            @if (!string.IsNullOrWhiteSpace(error))
-            {
-                <ErrorComponent Text="@error" />
-            }
+            <ErrorComponent Text="@error" />
             <div class="mt-2 form-group">
                 <label data-name="bid-up-label">Last Price</label>
                 <InputNumber @bind-Value="lastBidPrice" class="form-control" data-name="bid-up-input-value" />
@@ -66,6 +64,7 @@ else
     {
         try
         {
+            error = null;
             await BidService.BidUp(new BidUpDto { Id = Id, Price = lastBidPrice });
             NavigationManager.NavigateTo("/bids/published");
         }
@@ -79,13 +78,21 @@ else
             {
                 error = "Something bad happen, please try again";
             }
+            Logger.LogError(exception, exception.Message);
         }
     }
 
     private async Task FetchBid()
     {
-        Loading = true;
-        bid = await BidService.GetBidById(Id);
-        Loading = false;
+        try
+        {
+            Loading = true;
+            bid = await BidService.GetBidById(Id);
+        }
+        catch(Exception exception)
+        {
+            Logger.LogError(exception, exception.Message);
+        }
+        Loading = false;            
     }
 }

@@ -84,7 +84,7 @@ namespace OfferApp.IntegrationTests.Controllers
             var response = await Client.PutAsJsonAsync($"{PATH}/{id}", bidToUpdate);
 
             response.ShouldNotBeNull();
-            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var bidUpdated = await _bidRepository.Get(id);
             bidUpdated.ShouldNotBeNull();
             bidUpdated.Id.ShouldBe(id);

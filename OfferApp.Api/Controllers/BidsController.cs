@@ -38,7 +38,7 @@ namespace OfferApp.Api.Controllers
         {
             bidDto.Id = id;
             await _bidService.UpdateBid(bidDto);
-            return NoContent();
+            return Ok(bidDto);
         }
 
         [HttpDelete("{id:int}")]
