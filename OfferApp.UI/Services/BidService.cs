@@ -1,135 +1,144 @@
 ﻿using OfferApp.Shared.DTO;
+using System.Net.Http.Json;
 
 namespace OfferApp.UI.Services
 {
     public class BidService : IBidService
     {
-        private readonly List<BidDto> _bids = new()
-        {
-            new BidDto { Id = 1, Name="Name#1", Created = DateTime.UtcNow, Description = "Description#1#2023", FirstPrice = 100 },
-            new BidDto { Id = 2, Name="Name#2", Created = DateTime.UtcNow, Description = "Description#2#2023", FirstPrice = 200, Count = 2, LastPrice = 5000, Published = true, Updated = DateTime.UtcNow },
-            new BidDto { Id = 3, Name="Name#3", Created = DateTime.UtcNow, Description = "Description#3#2023", FirstPrice = 300, Published = true },
-        };
+        private readonly HttpClient _httpClient;
+        private const string BASE_URL = "/api/bids";
 
-        public Task<BidDto> AddBid(BidDto dto)
+        public BidService(HttpClient httpClient)
         {
-            dto.Id = _bids[^1].Id + 1;
-            dto.Created = DateTime.UtcNow;
-            _bids.Add(dto);
-            return Task.FromResult(dto);
+            _httpClient = httpClient;
         }
 
-        public Task<BidPublishedDto> BidUp(BidUpDto bidUp)
+        public async Task<BidDto> AddBid(BidDto dto)
         {
-            var bid = GetBid(bidUp.Id);
-            if (!bid.Published)
+            var response = await _httpClient.PostAsJsonAsync(BASE_URL, dto);
+            if (response.IsSuccessStatusCode)
             {
-                throw new InvalidOperationException("Bid is not published");
+                return (await response.Content.ReadFromJsonAsync<BidDto>())
+                    ?? throw new InvalidOperationException("Received null Bid");
             }
 
-            var basePrice = bid.FirstPrice;
-            if (bid.LastPrice is not null)
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode <= 499)
             {
-                basePrice = bid.LastPrice.Value;
+                var dictionary = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>()
+                    ?? throw new Exception("Invalid payload");
+                throw new InvalidOperationException(dictionary["Error"]);
             }
 
-            if (basePrice >= bidUp.Price)
-            {
-                throw new InvalidOperationException($"Bid price '{bidUp.Price}' cannot be less than '{basePrice}'");
-            }
-
-            bid.LastPrice = bidUp.Price;
-            bid.Updated = DateTime.UtcNow;
-            bid.Count++;
-            return Task.FromResult(CreateBidPublished(bid));
+            throw new Exception(await response.Content.ReadAsStringAsync());
         }
 
-        public Task DeleteBid(int id)
+        public async Task<BidPublishedDto> BidUp(BidUpDto bidUp)
         {
-            var bid = GetBid(id);
-            _bids.Remove(bid);
-            return Task.CompletedTask;
+            var response = await _httpClient.PatchAsJsonAsync($"{BASE_URL}/{bidUp.Id}/bid-up", bidUp);
+            if (response.IsSuccessStatusCode)
+            {
+                return (await response.Content.ReadFromJsonAsync<BidPublishedDto>())
+                    ?? throw new InvalidOperationException("Received null Bid");
+            }
+
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode <= 499)
+            {
+                var dictionary = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>()
+                    ?? throw new Exception("Invalid payload");
+                throw new InvalidOperationException(dictionary["Error"]);
+            }
+
+            throw new Exception(await response.Content.ReadAsStringAsync());
+        }
+
+        public async Task DeleteBid(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"{BASE_URL}/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode <= 499)
+            {
+                var dictionary = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>()
+                    ?? throw new Exception("Invalid payload");
+                throw new InvalidOperationException(dictionary["Error"]);
+            }
+
+            throw new Exception(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<IReadOnlyList<BidDto>> GetAllBids()
         {
-            await Task.CompletedTask;
-            await Task.Delay(1000);
-            return _bids;
+            return (await _httpClient.GetFromJsonAsync<IReadOnlyList<BidDto>>(BASE_URL))
+                ?? throw new InvalidOperationException("Received null Bids");
         }
 
         public async Task<IReadOnlyList<BidPublishedDto>> GetAllPublishedBids()
         {
-            await Task.CompletedTask;
-            await Task.Delay(1000);
-            return _bids.Where(b => b.Published)
-                        .Select(CreateBidPublished)
-                        .ToList();
+            return (await _httpClient.GetFromJsonAsync<IReadOnlyList<BidPublishedDto>>($"{BASE_URL}/published"))
+                ?? throw new InvalidOperationException("Received null Bids");
         }
 
-        public async Task<BidDto?> GetBidById(int id)
+        public Task<BidDto?> GetBidById(int id)
         {
-            await Task.Delay(1000);
-            return _bids.FirstOrDefault(b => b.Id == id);
+            return _httpClient.GetFromJsonAsync<BidDto>($"{BASE_URL}/{id}");
         }
 
         public async Task<bool> Published(int id)
         {
-            await Task.CompletedTask;
-            var bid = GetBid(id);
-            if (bid.Published)
+            var response = await _httpClient.PatchAsync($"{BASE_URL}/{id}/publish", null);
+            if (response.IsSuccessStatusCode)
             {
                 return true;
             }
 
-            bid.Published = true;
-            return true;
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode <= 499)
+            {
+                var dictionary = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>()
+                    ?? throw new Exception("Invalid payload");
+                throw new InvalidOperationException(dictionary["Error"]);
+            }
+
+            throw new Exception(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<bool> Unpublished(int id)
         {
-            await Task.CompletedTask;
-            var bid = GetBid(id);
-            if (!bid.Published)
+            var response = await _httpClient.PatchAsync($"{BASE_URL}/{id}/unpublish", null);
+            if (response.IsSuccessStatusCode)
             {
                 return true;
             }
 
-            bid.Published = false;
-            bid.Updated = null;
-            bid.LastPrice = null;
-            bid.Count = 0;
-            return true;
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode <= 499)
+            {
+                var dictionary = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>()
+                    ?? throw new Exception("Invalid payload");
+                throw new InvalidOperationException(dictionary["Error"]);
+            }
+
+            throw new Exception(await response.Content.ReadAsStringAsync());
         }
 
-        public Task<BidDto> UpdateBid(BidDto dto)
+        public async Task<BidDto> UpdateBid(BidDto dto)
         {
-            var bid = GetBid(dto.Id);
-            bid.Name = dto.Name;
-            bid.Description = dto.Description;
-            bid.FirstPrice = dto.FirstPrice;
-            return Task.FromResult(bid);
-        }
+            var response = await _httpClient.PutAsJsonAsync($"{BASE_URL}/{dto.Id}", dto);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<BidDto>()
+                    ?? throw new InvalidOperationException("Received null Bid");
+            }
 
-        private BidDto GetBid(int id)
-        {
-            return _bids.FirstOrDefault(b => b.Id == id)
-                ?? throw new InvalidOperationException("Bid not exists");
-        }
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode <= 499)
+            {
+                var dictionary = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>()
+                    ?? throw new Exception("Invalid payload");
+                throw new InvalidOperationException(dictionary["Error"]);
+            }
 
-        private BidPublishedDto CreateBidPublished(BidDto dto)
-        {
-            return new BidPublishedDto 
-            { 
-                Id = dto.Id,
-                Name = dto.Name,
-                Created = dto.Created,
-                Description = dto.Description,
-                FirstPrice = dto.FirstPrice,
-                Count = dto.Count,
-                LastPrice = dto.LastPrice,
-                Updated = dto.Updated
-            };
+            throw new Exception(await response.Content.ReadAsStringAsync());
         }
     }
 }

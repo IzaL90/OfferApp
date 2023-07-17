@@ -1,6 +1,7 @@
 ﻿@page "/bids/published"
 @inject IBidService BidService
 @inject NavigationManager NavigationManager
+@inject ILogger<ViewPublishedBidsPage> Logger
 
 <PageTitle>Offers</PageTitle>
 
@@ -57,7 +58,14 @@ else
     private async Task FetchBids()
     {
         Loading = true;
-        bids = await BidService.GetAllPublishedBids();
+        try
+        {
+            bids = await BidService.GetAllPublishedBids();            
+        }
+        catch(Exception exception)
+        {
+            Logger.LogError(exception, exception.Message);            
+        }
         Loading = false;
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/bids/edit/{Id:int}"
 @inject IBidService BidService
 @inject NavigationManager NavigationManager
+@inject ILogger<EditBidPage> Logger
 
 <h3>Edit Bid</h3>
 @if (Loading)
@@ -10,6 +11,7 @@
 else if (Bid is not null)
 {
     <BidFormComponent Bid="Bid" OnAdd="HandleValidSubmit" @ref="bidFormComponent" />
+    <ErrorComponent Text="@error" />
     <div class="mt-2">
         <button class="btn btn-success me-2" type="button" @onclick="Add" data-name="bid-submit-button">
             Update
@@ -31,6 +33,7 @@ else
     public bool Loading { get; set; } = true;
 
     private BidFormComponent? bidFormComponent;
+    private string? error;
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,8 +43,24 @@ else
 
     private async Task HandleValidSubmit(BidDto bidDto)
     {
-        await BidService.UpdateBid(bidDto);
-        NavigationManager.NavigateTo("");
+        try
+        {
+            error = null;
+            await BidService.UpdateBid(bidDto);
+            NavigationManager.NavigateTo("");
+        }
+        catch(Exception exception)
+        {
+            if (exception is InvalidOperationException)
+            {
+                error = exception.Message;
+            }
+            else
+            {
+                error = "Something bad happen, please try again";
+            }
+            Logger.LogError(exception, exception.Message);
+        }
     }
 
     public async Task Add()
@@ -51,8 +70,15 @@ else
 
     private async Task GetBid()
     {
-        Loading = true;
-        Bid = await BidService.GetBidById(Id);
+        try
+        {
+            Loading = true;
+            Bid = await BidService.GetBidById(Id);
+        }
+        catch(Exception exception)
+        {
+            Logger.LogError(exception, exception.Message);
+        }
         Loading = false;
     }
 }
