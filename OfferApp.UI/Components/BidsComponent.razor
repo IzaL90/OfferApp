@@ -1,4 +1,5 @@
 ﻿@inject NavigationManager NavigationManager
+@inject ILogger<BidsComponent> Logger
 
 <table class="table table-striped">
     <thead class="table-dark">
@@ -58,6 +59,9 @@
         <Content>
             <div class="modal-body" data-name="quest-delete-action-body">
                 Do you wish to delete bid @(BidToDelete?.Name)
+                <div class="mt-2">
+                    <ErrorComponent Text="@deleteError" />
+                </div>
             </div>
             <div class="modal-footer">
                 <div>
@@ -87,6 +91,8 @@
     public bool IsBidToDelete { get; private set; }
     public BidDto? BidToDelete { get; private set; }
 
+    private string? deleteError;
+
     public void OnClickedBid(BidDto bidDto)
     {
         if (BidClicked?.Id == bidDto.Id)
@@ -112,8 +118,24 @@
 
     private async Task ConfirmDeleteBid(BidDto bidDto)
     {
-        CloseDeleteBidModal();
-        await OnDelete.InvokeAsync(bidDto);
+        try
+        {
+            deleteError = null;
+            await OnDelete.InvokeAsync(bidDto);
+            CloseDeleteBidModal();
+        }
+        catch (Exception exception)
+        {
+            if (exception is InvalidOperationException)
+            {
+                deleteError = exception.Message;
+            }
+            else
+            {
+                deleteError = "Something bad happen, please try again later";
+            }
+            Logger.LogError(exception, exception.Message);
+        }
     }
 
     public async Task SetPublishBid(int id, bool publishStatus)
