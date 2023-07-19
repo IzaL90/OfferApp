@@ -116,11 +116,27 @@
         IsBidToDelete = false;
     }
 
+    private bool ValidateBeforeDelete(BidDto bidDto)
+    {
+        if (bidDto.Published)
+        {
+            deleteError = "Cannot delete published offer";
+            return false;
+        }
+
+        return true;
+    }
+
     private async Task ConfirmDeleteBid(BidDto bidDto)
     {
+        deleteError = null;
+        if (!ValidateBeforeDelete(bidDto))
+        {
+            return;
+        }
+
         try
         {
-            deleteError = null;
             await OnDelete.InvokeAsync(bidDto);
             CloseDeleteBidModal();
         }
