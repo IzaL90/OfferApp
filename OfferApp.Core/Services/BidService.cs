@@ -26,6 +26,12 @@ namespace OfferApp.Core.Services
         public async Task DeleteBid(int id)
         {
             var bid = await GetBid(id);
+            
+            if (bid.Published)
+            {
+                throw new OfferException("Cannot delete published bid");
+            }
+
             await _repository.Delete(bid);
         }
 

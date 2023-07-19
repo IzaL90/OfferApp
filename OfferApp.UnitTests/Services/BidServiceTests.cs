@@ -35,6 +35,19 @@ namespace OfferApp.UnitTests.Services
         }
 
         [Fact]
+        public async Task GivenPublishedBid_WhenDelete_ShouldThrowAnException()
+        {
+            var bid = Fixtures.CreatePublishedBid();
+            _bidRepository.Setup(b => b.Get(bid.Id)).ReturnsAsync(bid);
+
+            var exception = await Record.ExceptionAsync(() => _service.DeleteBid(bid.Id));
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<OfferException>();
+            exception.Message.ShouldContain("Cannot delete published bid");
+        }
+
+        [Fact]
         public async Task GivenNotExistingBid_WhenDeleteBid_ShouldThrowAnException()
         {
             var bid = Fixtures.CreateBid();
