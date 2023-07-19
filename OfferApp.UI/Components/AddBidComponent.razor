@@ -1,4 +1,5 @@
 ﻿@using Blazored.FluentValidation
+@inject ILogger<AddBidComponent> Logger
 
 <button class="btn btn-primary" @onclick="OpenModal" data-name="bid-add-button">
     Add
@@ -12,6 +13,9 @@
             <div>
                 <div class="modal-body">
                     <BidFormComponent Bid="Bid" OnAdd="HandleValidSubmit" @ref="bidFormComponent" />
+                    <div class="mt-2">
+                        <ErrorComponent Text="@addError" />
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div>
@@ -35,6 +39,7 @@
     public bool IsModalOpen { get; private set; } = false;
 
     private BidFormComponent? bidFormComponent;
+    private string? addError;
 
     public void OpenModal()
     {
@@ -56,7 +61,23 @@
 
     private async Task HandleValidSubmit(BidDto bidDto)
     {
-        await OnAdd.InvokeAsync(bidDto);
-        CloseModal();
+        try
+        {
+            addError = null;
+            await OnAdd.InvokeAsync(bidDto);
+            CloseModal();
+        }
+        catch (Exception exception)
+        {
+            if (exception is InvalidOperationException)
+            {
+                addError = exception.Message;
+            }
+            else
+            {
+                addError = "Something bad happen, please try again later";
+            }
+            Logger.LogError(exception, exception.Message);
+        }
     }
 }

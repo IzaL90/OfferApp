@@ -43,8 +43,6 @@ else
     public bool Loading { get; set; } = true;
     private IEnumerable<BidDto> bids = new List<BidDto>();
     private bool showErrorPublishingBid = false;
-    private string? addError;
-    private string? deleteError;
     private string? errorPublisher;
 
     protected override async Task OnInitializedAsync()
@@ -55,23 +53,7 @@ else
 
     private async Task AddBid(BidDto bidDto)
     {
-        try
-        {
-            addError = null;
-            await BidService.AddBid(bidDto);
-        }
-        catch(Exception exception)
-        {
-            if (exception is InvalidOperationException)
-            {
-                addError = exception.Message;
-            }
-            else
-            {
-                addError = "Something bad happen, please try again";
-            }
-            Logger.LogError(exception, exception.Message);
-        }
+        await BidService.AddBid(bidDto);
         await FetchBids();
     }
 
@@ -82,22 +64,7 @@ else
             return;
         }
 
-        try
-        {
-            await BidService.DeleteBid(bidDto.Id);
-        }
-        catch (Exception exception)
-        {
-            if (exception is InvalidOperationException)
-            {
-                deleteError = exception.Message;
-            }
-            else
-            {
-                deleteError = "Something bad happen, please try again";
-            }
-            Logger.LogError(exception, exception.Message);
-        }
+        await BidService.DeleteBid(bidDto.Id);
         await FetchBids();
     }
 
@@ -122,7 +89,7 @@ else
                 }
                 else
                 {
-                    errorPublisher = "Something bad happen, please try again";
+                    errorPublisher = "Something bad happen, please try again later";
                 }
                 OpenPublishingErrorModal();
                 Logger.LogError(exception, exception.Message);
@@ -142,7 +109,7 @@ else
                 }
                 else
                 {
-                    errorPublisher = "Something bad happen, please try again";
+                    errorPublisher = "Something bad happen, please try again later";
                 }
                 OpenPublishingErrorModal();
                 Logger.LogError(exception, exception.Message);
