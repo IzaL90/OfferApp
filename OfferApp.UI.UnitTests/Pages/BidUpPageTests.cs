@@ -1,5 +1,4 @@
 ﻿using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -69,7 +68,7 @@ namespace OfferApp.UI.UnitTests.Pages
             var information = _bidUpPage.Find("[data-name=\"bid-up-form\"]");
             information.ShouldNotBeNull();
             information.InnerHtml.ShouldNotBeNullOrWhiteSpace();
-            var bidUpInputValue = (_bidUpPage.Find("[data-name=\"bid-up-input-value\"]") as ElementWrapper)?.WrappedElement as IHtmlInputElement;
+            var bidUpInputValue = _bidUpPage.Find("[data-name=\"bid-up-input-value\"]") as IHtmlInputElement;
             bidUpInputValue.ShouldNotBeNull();
             bidUpInputValue.Value.ShouldBe(bid.FirstPrice.ToString());
         }
@@ -87,7 +86,7 @@ namespace OfferApp.UI.UnitTests.Pages
             var information = _bidUpPage.Find("[data-name=\"bid-up-form\"]");
             information.ShouldNotBeNull();
             information.InnerHtml.ShouldNotBeNullOrWhiteSpace();
-            var bidUpInputValue = (_bidUpPage.Find("[data-name=\"bid-up-input-value\"]") as ElementWrapper)?.WrappedElement as IHtmlInputElement;
+            var bidUpInputValue = _bidUpPage.Find("[data-name=\"bid-up-input-value\"]") as IHtmlInputElement;
             bidUpInputValue.ShouldNotBeNull();
             bidUpInputValue.Value.ShouldBe(bid.LastPrice.ToString());
         }
