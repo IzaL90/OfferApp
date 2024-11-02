@@ -27,5 +27,6 @@ export class SidebarPage {
 
   async clickAperture(): Promise<void> {
     await this.aperture.click();
-  }
+    }
+
 }
