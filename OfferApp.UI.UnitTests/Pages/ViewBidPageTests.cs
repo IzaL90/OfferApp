@@ -1,6 +1,5 @@
 ﻿using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -48,16 +47,16 @@ namespace OfferApp.UI.UnitTests.Pages
             var description = _viewBidPage.Find("[data-name=\"bid-description-input\"]");
             description.ShouldNotBeNull();
             description.InnerHtml.ShouldContain(bid.Description);
-            var firstPrice = (_viewBidPage.Find("[data-name=\"bid-first-price-input\"]") as ElementWrapper)?.WrappedElement as IHtmlInputElement;
+            var firstPrice = _viewBidPage.Find("[data-name=\"bid-first-price-input\"]") as IHtmlInputElement;
             firstPrice.ShouldNotBeNull();
-            firstPrice.Value.ShouldBe(bid.FirstPrice.ToString());            
-            var created = (_viewBidPage.Find("[data-name=\"bid-created-input\"]") as ElementWrapper)?.WrappedElement as IHtmlInputElement;
+            firstPrice.Value.ShouldBe(bid.FirstPrice.ToString());
+            var created = _viewBidPage.Find("[data-name=\"bid-created-input\"]") as IHtmlInputElement;
             created.ShouldNotBeNull();
             created.Value.ShouldContain(bid.Created.ToString());
-            var count = (_viewBidPage.Find("[data-name=\"bid-count-input\"]") as ElementWrapper)?.WrappedElement as IHtmlInputElement;
+            var count = _viewBidPage.Find("[data-name=\"bid-count-input\"]") as IHtmlInputElement;
             count.ShouldNotBeNull();
             count.Value.ShouldContain(bid.Count.ToString());
-            var published = (_viewBidPage.Find("[data-name=\"bid-published-input\"]") as ElementWrapper)?.WrappedElement as IHtmlInputElement;
+            var published = _viewBidPage.Find("[data-name=\"bid-published-input\"]") as IHtmlInputElement;
             published.ShouldNotBeNull();
             published.Value.ShouldContain(bid.Published ? "Yes" : "No");
         }
