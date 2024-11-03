@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { SidebarPage } from '../pageObjects/SidebarPage';
 import { TablePage } from '../pageObjects/TablePage';
+import { SitePage } from '../pageObjects/SitePage';
 
 test.beforeEach('Go to page', async ({ page }) => {
     await page.goto('http://localhost:5050');
@@ -25,4 +26,10 @@ test('Table visibility test', async ({ page }) => {
     const table = new TablePage(page)
     await table.isVisible()
     await table.expectColumns()
+});
+
+test('Add button test', async ({ page }) => {
+    const site = new SitePage(page)
+    await site.isVisible()
+    await site.expectText()
 });
