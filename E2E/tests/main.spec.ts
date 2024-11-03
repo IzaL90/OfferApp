@@ -28,10 +28,17 @@ test('Table visibility test', async ({ page }) => {
     await table.expectColumns()
 });
 
-test.only('Add button test', async ({ page }) => {
+test('Add button test', async ({ page }) => {
     const site = new SitePage(page)
     await site.isVisible()
     await site.expectText()
     await site.clickButton()
     await site.modal.expectModalVisible()
+});
+
+test.only('Edit', async ({ page }) => {
+    const table = new TablePage(page)
+    await table.isVisible()
+    await table.clickEdit()
+    await table.editPage.expectModalVisible()
 });
