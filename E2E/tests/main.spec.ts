@@ -44,3 +44,10 @@ test.only('Edit', async ({ page }) => {
     await table.clickEdit()
     await edit.expectFormVisible()
 });
+
+test.only('Delete', async ({ page }) => {
+    const table = new TablePage(page)
+    await table.isVisible()
+    await table.clickDelete()
+    await table.delete.expectModalVisible()
+});

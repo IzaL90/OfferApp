@@ -1,6 +1,7 @@
 import { Page, Locator } from "playwright";
 import { expect } from '@playwright/test';
 import { EditComponent } from "../components/EditComponent";
+import { DeleteComponent } from "../components/DeleteComponent";
 
 
 export class TablePage {
@@ -14,6 +15,8 @@ export class TablePage {
     public readonly lastPrice: Locator;
     public readonly action: Locator;
     public readonly editButton: Locator
+    public readonly deleteButton: Locator
+    public readonly delete:DeleteComponent
 
     constructor(page: Page) {
         this.page = page;
@@ -26,6 +29,8 @@ export class TablePage {
         this.lastPrice = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='LastPrice']")
         this.action = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Action']")
         this.editButton= this.page.locator("//span[contains(@class,'oi-pencil')]")
+        this.deleteButton = this.page.locator("//span[contains(@class,'oi-trash')]")
+        this.delete = new DeleteComponent(this.page.locator("//div[@class='modal-content']"))
     }
 
     public async isVisible(): Promise<boolean> {
@@ -44,6 +49,10 @@ export class TablePage {
 
     public async clickEdit(): Promise<void> {
         await this.editButton.click();
+    }
+
+    public async clickDelete(): Promise<void> {
+        await this.deleteButton.click();
     }
 
 }
