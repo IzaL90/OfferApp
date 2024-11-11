@@ -14,7 +14,6 @@ export class TablePage {
     public readonly lastPrice: Locator;
     public readonly action: Locator;
     public readonly editButton: Locator
-    public readonly editPage: EditComponent
 
     constructor(page: Page) {
         this.page = page;
@@ -27,7 +26,6 @@ export class TablePage {
         this.lastPrice = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='LastPrice']")
         this.action = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Action']")
         this.editButton= this.page.locator("//span[contains(@class,'oi-pencil')]")
-        this.editPage = new EditComponent(this.page.locator("//article[contains(@class,'content')]"))
     }
 
     public async isVisible(): Promise<boolean> {

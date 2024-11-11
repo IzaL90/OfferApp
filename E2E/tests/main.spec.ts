@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { SidebarPage } from '../pageObjects/SidebarPage';
 import { TablePage } from '../pageObjects/TablePage';
 import { SitePage } from '../pageObjects/SitePage';
+import { EditPage } from '../pageObjects/EditPage';
 
 test.beforeEach('Go to page', async ({ page }) => {
     await page.goto('http://localhost:5050');
@@ -38,7 +39,8 @@ test('Add button test', async ({ page }) => {
 
 test.only('Edit', async ({ page }) => {
     const table = new TablePage(page)
+    const edit = new EditPage(page)
     await table.isVisible()
     await table.clickEdit()
-    await table.editPage.expectModalVisible()
+    await edit.expectFormVisible()
 });
