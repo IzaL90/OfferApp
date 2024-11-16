@@ -5,15 +5,14 @@ import { AddComponent } from "../components/AddComponent";
 export class SitePage {
     public readonly page: Page;
     public readonly root: Locator;
-    public readonly home: Locator;
-    public readonly aperture: Locator;
-    public readonly clickedHome: Locator;
+    public readonly add: Locator
     public readonly modal: AddComponent
 
     constructor(page: Page) {
         this.page = page;
-        this.root = this.page.locator("//button[@data-name='bid-add-button']");
-        this.modal = new AddComponent(this.page.locator("//div[@class='modal-content']"))
+        this.root = this.page.locator("//main")
+        this.add = this.root.locator("//button[@data-name='bid-add-button']");
+        this.modal = new AddComponent(this.root.locator("//div[@class='modal-content']"))
     }
 
     async isVisible(): Promise<boolean> {
@@ -21,11 +20,11 @@ export class SitePage {
     }
 
     async clickButton(): Promise<void> {
-        await this.root.click();
+        await this.add.click();
     }
 
     async expectText(): Promise<void> {
-        await expect(this.root).toHaveText("Add")
+        await expect(this.add).toHaveText("Add")
     }
 
 }

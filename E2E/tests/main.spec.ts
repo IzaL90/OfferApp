@@ -37,7 +37,7 @@ test('Add button test', async ({ page }) => {
     await site.modal.expectModalVisible()
 });
 
-test.only('Edit', async ({ page }) => {
+test('Edit', async ({ page }) => {
     const table = new TablePage(page)
     const edit = new EditPage(page)
     await table.isVisible()
@@ -45,7 +45,7 @@ test.only('Edit', async ({ page }) => {
     await edit.expectFormVisible()
 });
 
-test.only('Delete', async ({ page }) => {
+test('Delete', async ({ page }) => {
     const table = new TablePage(page)
     await table.isVisible()
     await table.clickDelete()
