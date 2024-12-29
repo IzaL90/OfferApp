@@ -51,3 +51,15 @@ test('Delete', async ({ page }) => {
     await table.clickDelete()
     await table.delete.expectModalVisible()
 });
+
+test.only('Add BID', async ({ page }) => {
+    const site = new SitePage(page)
+    const table = new TablePage(page)
+    await site.isVisible()
+    await site.expectText()
+    await site.clickButton()
+    await site.modal.expectModalVisible()
+    await site.modal.fillForm()
+    await site.modal.clickSubmit()
+    await expect(table.rowName).toContainText('TestBidddddddd')
+});

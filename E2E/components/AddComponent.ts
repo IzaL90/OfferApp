@@ -1,4 +1,4 @@
-import { expect, Page } from "@playwright/test";
+import test, { expect, Page } from "@playwright/test";
 import { Locator } from "playwright";
 import { FormComponent } from "./FormComponent";
 
@@ -28,5 +28,16 @@ export class AddComponent {
     await expect.soft(this.close).toBeVisible()
     
   }
+
+  public async fillForm(): Promise<void> {
+    test.slow()
+    await this.form.name.fill('TestBidddddddd')
+    await this.form.price.fill('7657')
+    await this.form.description.fill('a description')
+}
+
+  public async clickSubmit():Promise<void>{
+    await this.submit.click()
+}
 
 }

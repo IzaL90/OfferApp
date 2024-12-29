@@ -6,6 +6,7 @@ import { DeleteComponent } from "../components/DeleteComponent";
 export class TablePage {
     public readonly page: Page;
     public readonly root: Locator;
+    public readonly rowName:Locator
     public readonly id: Locator;
     public readonly name: Locator;
     public readonly created: Locator;
@@ -20,6 +21,7 @@ export class TablePage {
     constructor(page: Page) {
         this.page = page;
         this.root = this.page.locator("//table[contains(@class,'table')]");
+        this.rowName= this.page.locator("//tr[contains(@class, 'table-primary')]//td").first()
         this.id = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Id']")
         this.name = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Name']")
         this.created = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Created']")
