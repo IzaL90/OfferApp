@@ -52,7 +52,7 @@ test('Delete', async ({ page }) => {
     await table.delete.expectModalVisible()
 });
 
-test.only('Add BID', async ({ page }) => {
+test('Add BID', async ({ page }) => {
     const site = new SitePage(page)
     const table = new TablePage(page)
     await site.isVisible()
