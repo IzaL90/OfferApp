@@ -63,3 +63,16 @@ test('Add BID', async ({ page }) => {
     await site.modal.clickSubmit()
     await expect(table.rowName).toContainText('TestBidddddddd')
 });
+
+test('Edit BID', async ({ page }) => {
+    const site = new SitePage(page)
+    const table = new TablePage(page)
+    const edit = new EditPage(page)
+    await site.isVisible()
+    await table.clickEdit()
+    await edit.expectFormVisible()
+    await edit.editForm()
+    await edit.clickSubmit()
+    await expect(table.rowName).toContainText('TestBid')
+
+});

@@ -1,18 +1,21 @@
 import { Page, Locator } from "playwright"
 import { expect } from '@playwright/test';
 import { AddComponent } from "../components/AddComponent";
+import { FormComponent } from "../components/FormComponent";
 
 export class SitePage {
     public readonly page: Page;
     public readonly root: Locator;
     public readonly add: Locator
     public readonly modal: AddComponent
+    public readonly form: FormComponent
 
     constructor(page: Page) {
         this.page = page;
         this.root = this.page.locator("//main")
         this.add = this.root.locator("//button[@data-name='bid-add-button']");
         this.modal = new AddComponent(this.root.locator("//div[@class='modal-content']"))
+        this.form = new FormComponent(this.root.locator("//form"))
     }
 
     async isVisible(): Promise<boolean> {
