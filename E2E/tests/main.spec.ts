@@ -55,6 +55,12 @@ test("Delete", async ({ page }) => {
   await table.delete.expectModalVisible();
 });
 
+test("View", async ({ page }) => {
+    const table = new TablePage(page);
+    await table.isVisible();
+    await table.clickView()
+  });
+
 test("Add BID", async ({ page }) => {
   const site = new SitePage(page);
   const table = new TablePage(page);

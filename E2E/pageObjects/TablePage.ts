@@ -16,6 +16,7 @@ export class TablePage {
     public readonly action: Locator;
     public readonly editButton: Locator
     public readonly deleteButton:Locator
+    public readonly viewButton:Locator
     public readonly delete:DeleteComponent
 
     constructor(page: Page) {
@@ -31,6 +32,7 @@ export class TablePage {
         this.action = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Action']")
         this.editButton = this.page.locator("//span[contains(@class,'oi-pencil')]")
         this.deleteButton = this.page.locator("//span[contains(@class,'oi-trash')]")
+        this.viewButton = this.page.locator("//span[contains(@class,'oi-magnifying-glass')]")
         this.delete = new DeleteComponent(this.page.locator("//div[@class='modal-content']"))
     }
 
@@ -54,6 +56,10 @@ export class TablePage {
 
     public async clickDelete(): Promise<void> {
         await this.deleteButton.click();
+    }
+
+    public async clickView(): Promise<void> {
+        await this.viewButton.click();
     }
 
 }
