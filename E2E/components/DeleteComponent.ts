@@ -6,6 +6,7 @@ export class DeleteComponent {
   public readonly yes: Locator
   public readonly no: Locator
 
+
   constructor(root: Locator){
     this.root = root;
     this.yes = this.root.locator("//button[@data-name='bid-delete-action-confirm']")
@@ -21,5 +22,9 @@ export class DeleteComponent {
     await expect(this.no).toBeVisible()
     
   }
+
+  public async clickYes():Promise<void>{
+    await this.yes.click()
+}
 
 }
