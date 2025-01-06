@@ -3,6 +3,7 @@ import { SidebarPage } from "../pageObjects/SidebarPage";
 import { TablePage } from "../pageObjects/TablePage";
 import { SitePage } from "../pageObjects/SitePage";
 import { EditPage } from "../pageObjects/EditPage";
+import { defaultBid } from "../interfaces/Bid";
 
 test.beforeEach("Go to page", async ({ page }) => {
   await page.goto("http://localhost:5050");
@@ -19,7 +20,6 @@ test("Smoke tests", async ({ page }) => {
 
 test("Sidebar test", async ({ page }) => {
   const sidebar = new SidebarPage(page);
-  //await page.goto('http://localhost:5050');
   await sidebar.isVisible();
   await sidebar.clickHome();
   await expect(sidebar.clickedHome).toHaveClass(/active/);
@@ -56,10 +56,10 @@ test("Delete", async ({ page }) => {
 });
 
 test("View", async ({ page }) => {
-    const table = new TablePage(page);
-    await table.isVisible();
-    await table.clickView()
-  });
+  const table = new TablePage(page);
+  await table.isVisible();
+  await table.clickView();
+});
 
 test("Add BID", async ({ page }) => {
   const site = new SitePage(page);
@@ -70,7 +70,7 @@ test("Add BID", async ({ page }) => {
   await site.modal.expectModalVisible();
   await site.modal.fillForm();
   await site.modal.clickSubmit();
-  await expect(table.rowName).toContainText("TestBidddddddd");
+  await expect(table.rowName).toContainText(defaultBid.name);
 });
 
 test("Edit BID", async ({ page }) => {
@@ -86,9 +86,9 @@ test("Edit BID", async ({ page }) => {
 });
 
 test("Delete BID", async ({ page }) => {
-    const site = new SitePage(page);
-    const table = new TablePage(page);
-    await table.clickDelete()
-    await site.deleteModal.clickYes()
-    await expect(table.rowName).toBeHidden()
-  });
+  const site = new SitePage(page);
+  const table = new TablePage(page);
+  await table.clickDelete();
+  await site.deleteModal.clickYes();
+  await expect(table.rowName).toBeHidden();
+});
