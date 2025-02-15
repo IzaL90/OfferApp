@@ -3,7 +3,7 @@ import { SidebarPage } from "../pageObjects/SidebarPage";
 import { TablePage } from "../pageObjects/TablePage";
 import { SitePage } from "../pageObjects/SitePage";
 import { EditPage } from "../pageObjects/EditPage";
-import { defaultBid } from "../interfaces/Bid";
+import { defaultBid, editBid } from "../interfaces/Bid";
 
 test.beforeEach("Go to page", async ({ page }) => {
   await page.goto("http://localhost:5050");
@@ -61,7 +61,7 @@ test("View", async ({ page }) => {
   await table.clickView();
 });
 
-test("Add BID", async ({ page }) => {
+test.only("Add BID", async ({ page }) => {
   const site = new SitePage(page);
   const table = new TablePage(page);
   await site.isVisible();
@@ -73,7 +73,7 @@ test("Add BID", async ({ page }) => {
   await expect(table.rowName).toContainText(defaultBid.name);
 });
 
-test("Edit BID", async ({ page }) => {
+test.only("Edit BID", async ({ page }) => {
   const site = new SitePage(page);
   const table = new TablePage(page);
   const edit = new EditPage(page);
@@ -82,7 +82,7 @@ test("Edit BID", async ({ page }) => {
   await edit.expectFormVisible();
   await edit.editForm();
   await edit.clickSubmit();
-  await expect(table.rowName).toContainText("TestBid");
+  await expect(table.rowName).toContainText(editBid.name);
 });
 
 test("Delete BID", async ({ page }) => {
