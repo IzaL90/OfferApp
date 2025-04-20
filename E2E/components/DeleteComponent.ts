@@ -27,4 +27,6 @@ export class DeleteComponent {
     await this.yes.click()
 }
 
+
+
 }

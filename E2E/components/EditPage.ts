@@ -1,11 +1,11 @@
 import { expect } from "@playwright/test";
 import { Page, Locator } from "playwright";
-import { FormComponent } from "../components/FormComponent";
-import { AddComponent } from "../components/AddComponent";
+import { FormComponent } from "./FormComponent";
+import { AddComponent } from "./AddComponent";
 import { Bid, editBid } from "../interfaces/Bid";
 
-export class EditPage {
-    public readonly page: Page;
+export class EditComponent {
+    public readonly page: Page
     public readonly root: Locator;
     public readonly submit: Locator;
     public readonly cancel: Locator;
@@ -13,11 +13,10 @@ export class EditPage {
     public readonly modal: AddComponent;
 
     constructor(page: Page) {
-        this.page = page;
-        this.root = this.page.locator("//div//main");
-        this.submit = this.root.locator("//button[@data-name='bid-submit-button']");
-        this.cancel = this.root.locator("//button[@data-name='bid-close-button']");
-        this.form = new FormComponent(this.page.locator("//form"));
+        this.page = page
+        this.submit = this.page.locator("//button[@data-name='bid-submit-button']");
+        this.cancel = this.page.locator("//button[@data-name='bid-close-button']");
+        this.form = new FormComponent(this.page);
     }
 
     async isVisible(): Promise<boolean> {

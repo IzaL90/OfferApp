@@ -4,18 +4,20 @@ import { FormComponent } from "./FormComponent";
 import { Bid, defaultBid } from "../interfaces/Bid";
 
 export class AddComponent {
+  public readonly page: Page
   public readonly root: Locator;
   public readonly submit: Locator;
   public readonly cancel: Locator;
   public readonly close: Locator;
   public readonly form: FormComponent;
 
-  constructor(root: Locator) {
+  constructor(page: Page, root: Locator) {
+    this.page = page
     this.root = root;
     this.submit = this.root.locator("//button[@data-name='bid-submit-button']");
     this.cancel = this.root.locator("//button[@data-name='bid-close-button']");
     this.close = this.root.locator("//button[@data-name='modal-close-button']");
-    this.form = new FormComponent(this.root.locator("//form"));
+    this.form = new FormComponent(this.page);
   }
 
   public async isVisible(): Promise<boolean> {

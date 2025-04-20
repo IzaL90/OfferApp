@@ -1,12 +1,15 @@
 import { Page, Locator } from "playwright";
 import { expect } from '@playwright/test';
 import { DeleteComponent } from "../components/DeleteComponent";
+import { PublishUnpublishComponent } from "../components/PublishUnpublish";
+import { EditComponent } from "../components/EditPage";
+import { FormComponent } from "../components/FormComponent";
 
 
 export class TablePage {
     public readonly page: Page;
     public readonly root: Locator;
-    public readonly rowName:Locator
+    public readonly row:Locator
     public readonly id: Locator;
     public readonly name: Locator;
     public readonly created: Locator;
@@ -16,13 +19,16 @@ export class TablePage {
     public readonly action: Locator;
     public readonly editButton: Locator
     public readonly deleteButton:Locator
-    public readonly viewButton:Locator
+    public readonly viewButton :Locator
+    public readonly publishUnpublish: PublishUnpublishComponent
     public readonly delete:DeleteComponent
+    public readonly edit: EditComponent
+    public readonly form:FormComponent
 
     constructor(page: Page) {
         this.page = page;
         this.root = this.page.locator("//table[contains(@class,'table')]");
-        this.rowName= this.page.locator("//tr[contains(@class, 'table-primary')]//td").first()
+        this.row= this.page.locator("//tr[contains(@class, 'table-primary')]//td")
         this.id = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Id']")
         this.name = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Name']")
         this.created = this.page.locator("//table[contains(@class, 'table')]//th[normalize-space(text())='Created']")
@@ -34,6 +40,13 @@ export class TablePage {
         this.deleteButton = this.page.locator("//span[contains(@class,'oi-trash')]")
         this.viewButton = this.page.locator("//span[contains(@class,'oi-magnifying-glass')]")
         this.delete = new DeleteComponent(this.page.locator("//div[@class='modal-content']"))
+        this.publishUnpublish = new PublishUnpublishComponent(this.root)
+        this.edit = new EditComponent(this.page)
+        this.form = new FormComponent(this.page);
+    }
+
+    public getRowLocator(name: string): Locator {
+        return this.page.locator(`//tr[contains(@class,"table")]//td[contains(text(), "${name}")]`);
     }
 
     public async isVisible(): Promise<boolean> {
@@ -50,17 +63,25 @@ export class TablePage {
         await expect(this.action).toBeVisible()
     }
 
-    public async clickEdit(): Promise<void> {
-        await this.editButton.click();
+    public getEditLocator(name:string): Locator {
+        return this.page.locator(`//tr[contains(@class,"table")]//td[contains(text(), "${name}")]//following-sibling::td//span[contains(@class,"oi-pencil")]`)
     }
 
-    public async clickDelete(): Promise<void> {
-        await this.deleteButton.click();
+    public async clickEdit(name:string): Promise<void> {
+        await this.getEditLocator(name).click();
     }
 
     public async clickView(): Promise<void> {
         await this.viewButton.click();
     }
+    
+    public getDeleteLocator(name:string): Locator {
+        return this.root.locator(`//tr[contains(@class,"table")]//td[contains(text(), "${name}")]//following-sibling::td//span[contains(@class,"oi-trash")]`)
+      }
+      
+      public async clickDelete(name:string): Promise<void> {
+        await this.getDeleteLocator(name).click();
+      }
 
 }
 

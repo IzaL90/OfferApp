@@ -16,9 +16,9 @@ export class SitePage {
         this.page = page;
         this.root = this.page.locator("//main")
         this.add = this.root.locator("//button[@data-name='bid-add-button']");
-        this.modal = new AddComponent(this.root.locator("//div[@class='modal-content']"))
+        this.modal = new AddComponent(this.page, this.root.locator("//div[@class='modal-content']"))
         this.deleteModal = new DeleteComponent(this.root.locator("//div[@class='modal-content']"))
-        this.form = new FormComponent(this.root.locator("//form"))
+        this.form = new FormComponent(this.page)
     }
 
     async isVisible(): Promise<boolean> {
