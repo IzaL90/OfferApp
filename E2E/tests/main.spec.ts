@@ -97,10 +97,23 @@ test("Publish BID", async ({ page }) => {
   expect(publishedBidsPage.getRowLocator(editBid.name)).toBeVisible()
 });
 
+test("Unublish BID", async ({ page }) => {
+  const site = new SitePage(page);
+  const table = new TablePage(page);
+  const sidebar = new SidebarPage(page);
+  const publishedBidsPage = new PublishedBidsPage(page)
+  await sidebar.clickHome()
+  await table.getRowLocator(editBid.name).click()
+  expect(table.publishUnpublish.expectButtonVisible(table.publishUnpublish.unpublish))
+  await table.publishUnpublish.unpublish.click({timeout:3000})
+  await sidebar.clickAperture()
+  expect(publishedBidsPage.getRowLocator(editBid.name)).toBeHidden()
+});
+
 test("Delete BID", async ({ page }) => {
   const site = new SitePage(page);
   const table = new TablePage(page);
   await table.clickDelete(editBid.name);
   await site.deleteModal.clickYes();
-  await expect(table.row).toBeHidden();
+  await expect(table.getRowLocator(editBid.name)).toBeHidden();
 });
